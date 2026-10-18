@@ -1,0 +1,3 @@
+axi          v0.39.11  42ca270ebd8bbbc1c64ddc0ca712e722eb9e3f06
+common_cells v1.39.0  9ca8a7655f741e7dd5736669a20a301325194c28
+local change: assertion macros renamed with PULP_ prefix (see update_pulp.sh)
