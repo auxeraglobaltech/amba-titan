@@ -275,6 +275,11 @@ module tb_bridge;
 
   task automatic h0_access(logic we, addr_t addr, logic [31:0] wdata, logic [3:0] be);
     h0_exp_t e;
+    // Align to the clocking block first: a drive issued between clocking events
+    // only takes effect at the next one, while gnt (= TL a_ready) can already be
+    // 1 with no request.  Without this the first access recorded a grant that
+    // never happened and every later check was off by one transaction.
+    @(h0_cb);
     while (h0_outstanding >= 2) @(h0_cb);
     h0_cb.h0_req   <= 1'b1;
     h0_cb.h0_we    <= we;
@@ -373,6 +378,7 @@ module tb_bridge;
                           logic [31:0] data[$], logic [3:0] strb[$],
                           axi_pkg::atop_t atop, output axi_pkg::resp_t resp);
     host_id_t id = $urandom();
+    @(h1_cb);  // align (see h0_access): AXI ready can be high before valid
     h1_drv.b_ready  = 1'b1;
     h1_drv.r_ready  = 1'b1;
     h1_drv.aw       = '0;
@@ -406,6 +412,7 @@ module tb_bridge;
   task automatic h1_read(addr_t addr, int len, int size, axi_pkg::burst_t burst,
                          output logic [31:0] data[$], output axi_pkg::resp_t resp[$]);
     host_id_t id = $urandom();
+    @(h1_cb);  // align (see h0_access)
     data = {}; resp = {};
     h1_drv.b_ready  = 1'b1;
     h1_drv.r_ready  = 1'b1;
@@ -504,7 +511,7 @@ module tb_bridge;
   // ---------------------------------------------------------------------------
   initial begin
     wait (rst_n);
-    repeat (5) @(posedge clk);
+    repeat (5) @(h0_cb);
     fork
       host0_random();
       host1_sequence();
