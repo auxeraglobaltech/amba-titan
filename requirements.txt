@@ -1,0 +1,6 @@
+hjson==3.1.0
+Mako==1.4.3
+MarkupSafe==3.0.4
+pycryptodome==4.0.1
+semantic-version==2.10.0
+tabulate==0.10.0

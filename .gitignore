@@ -1,0 +1,28 @@
+# Simulator output
+**/xcelium.d/
+**/INCA_libs/
+**/runs/
+**/scratch/
+*.shm/
+*.trn
+*.dsn
+*.log
+*.key
+*.history
+.simvision/
+waves.*
+
+# Build output
+**/build/
+*.o
+*.elf
+*.bin
+*.map
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+
+# Local leftovers of the archived TL-UL environment (see branch legacy-earlgrey-tlul)
+/_legacy_local/
