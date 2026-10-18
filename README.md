@@ -6,8 +6,9 @@ so every bus transaction between modules — CPU to crossbar, crossbar to
 crossbar, crossbar to IP — is AXI. The testbench is a fresh UVM environment
 targeting Cadence Xcelium; tests are UVM sequences, C firmware, or both.
 
-> 🚧 **Under construction.** See [`AXI_SOC_PLAN.md`](AXI_SOC_PLAN.md) for the
-> plan, phases and current status.
+**Status (2026-10-18):** 7/7 proof tests pass on Xcelium — see
+[`uvm/README.md`](uvm/README.md). Design decisions and history:
+[`AXI_SOC_PLAN.md`](AXI_SOC_PLAN.md).
 
 ## Where to work
 
@@ -25,7 +26,12 @@ git clone --recurse-submodules <this repo>
 ~/.local/opt/python-3.11.15-titan/bin/python3 -m venv .venv
 .venv/bin/pip install -r requirements.txt
 source uvm/sim/env.sh            # csh: source uvm/sim/env.csh
+uvm/sim/run.sh fw_hello          # one test (~1 minute)
+uvm/sim/regress.sh               # all tests
 ```
+
+New here? Read [`firmware/README.md`](firmware/README.md), then
+[`uvm/README.md`](uvm/README.md). That is all you need to write tests.
 
 ## History
 

@@ -11,7 +11,7 @@
 | 2. Fabric + top | 🟡 code done, chip lints clean (slang, sim + non-sim builds) — ✅ SIM-2 passed | `gen_fabric.py` → `titan_axi_fabric.sv` (4 hosts, 24+1 main devices, 27 peri devices, 4 `axi_cdc`) + `fabric_ports.json`; `patch_top.py` changes only the two crossbar instances (117 connections); `rtl.f` = 660 files |
 | 3. UVM core | ✅ 2026-10-18 (SIM-3) | 56 passive AXI agents + fabric scoreboard + sw status monitor; UART/GPIO monitors; generated probe and address map |
 | 4. Firmware | ✅ 2026-10-18 (SIM-3) | crt0 opens Earl Grey's reset PMP (MMWP: SRAM/PLIC denied at reset) and inits SRAM via sram_ctrl; 36 regtool headers |
-| 5. Handover | 🔄 in progress | READMEs for firmware/, uvm/, rtl/ |
+| 5. Handover | ✅ 2026-10-18 | `firmware/README.md`, `uvm/README.md`, `rtl/README.md`, root `README.md`; exercises listed in the first two |
 
 **Simulation hand-offs** (the operator runs them, Claude never does):
 
