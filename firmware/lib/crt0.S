@@ -13,11 +13,21 @@
 //     first 2 KiB and before any stack use, open everything with one locked
 //     all-access rule (entry 15) and clear the reset rules — as OpenTitan's
 //     test ROM does. (mseccfg.RLB=1 at reset permits editing locked rules.)
-//  2. SRAM. Main SRAM holds random data with bad ECC until initialized; the
+//  2. Clocks. The AST oscillators start uncalibrated (the simulation models
+//     pick a random 25-60 MHz for the 96 MHz IO clock, ~35 MHz for the 100 MHz
+//     system clock). A write to AST's REGAL register marks AST initialized and
+//     switches every oscillator to its calibrated frequency. OpenTitan's ROM
+//     does this by copying an AST configuration out of OTP when
+//     CREATOR_SW_CFG_AST_INIT_EN is set; our OTP image does not set it, so
+//     crt0 rewrites REGAL with its own value. Without this, firmware's idea of
+//     a microsecond and of a baud rate is off by ~4x.
+//  3. SRAM. Main SRAM holds random data with bad ECC until initialized; the
 //     first read of such a word is an integrity error. sram_ctrl CTRL.INIT
 //     fills it with valid data in hardware (~32k cycles).
-//  3. .bss zero, .data copy, then main().
+//  4. .bss zero, .data copy, then main().
 
+#include "regs/ast_regs.h"
+#include "regs/sensor_ctrl_regs.h"
 #include "regs/sram_ctrl_regs.h"
 #include "top_earlgrey_memory.h"   // top_earlgrey.h has C enums; this one is assembler-safe
 
@@ -68,7 +78,17 @@ _reset_start:
   li x22, 0; li x23, 0; li x24, 0; li x25, 0; li x26, 0; li x27, 0; li x28, 0
   li x29, 0; li x30, 0; li x31, 0
 
-  // 2. Initialize main SRAM and wait for STATUS.INIT_DONE.
+  // 2. Calibrate the clocks (REGAL write) and wait for AST_INIT_DONE.
+  li   a0, TOP_EARLGREY_AST_BASE_ADDR
+  lw   t0, AST_REGAL_REG_OFFSET(a0)
+  sw   t0, AST_REGAL_REG_OFFSET(a0)
+  li   a0, TOP_EARLGREY_SENSOR_CTRL_AON_BASE_ADDR
+8:
+  lw   t0, SENSOR_CTRL_STATUS_REG_OFFSET(a0)
+  andi t0, t0, (1 << SENSOR_CTRL_STATUS_AST_INIT_DONE_BIT)
+  beqz t0, 8b
+
+  // 3. Initialize main SRAM and wait for STATUS.INIT_DONE.
   li   a0, TOP_EARLGREY_SRAM_CTRL_MAIN_REGS_BASE_ADDR
   li   t0, (1 << SRAM_CTRL_CTRL_INIT_BIT)
   sw   t0, SRAM_CTRL_CTRL_REG_OFFSET(a0)
@@ -81,7 +101,7 @@ _reset_start:
   la   sp, _stack_end
   la   gp, __global_pointer$
 
-  // 3. Zero .bss, copy .data from ROM.
+  // 4. Zero .bss, copy .data from ROM.
   la   a0, _bss_start
   la   a1, _bss_end
 2:

@@ -205,6 +205,11 @@ package titan_env_pkg;
       super.new(name, parent);
     endfunction
 
+    protected function string dots_to_underscores(string s);
+      foreach (s[i]) if (s[i] == ".") s[i] = "_";
+      return s;
+    endfunction
+
     // The UVM test's bus master (stub CPU).
     function axi_sequencer sim_master();
       return axi["host.sim_host"].sequencer;
@@ -219,7 +224,8 @@ package titan_env_pkg;
         acfg.is_active = (port == "host.sim_host");
         if (!uvm_config_db #(virtual axi_if)::get(null, "", {"axi_vif:", port}, acfg.vif))
           `uvm_fatal("ENV", {"no axi_if for port ", port, " (is titan_axi_probe compiled?)"})
-        axi[port] = axi_agent::type_id::create({"axi_", port}, this);
+        // UVM component names may not contain '.': "host.rv_dm.sba" -> "axi_host_rv_dm_sba".
+        axi[port] = axi_agent::type_id::create({"axi_", dots_to_underscores(port)}, this);
         axi[port].cfg = acfg;
       end
       if (cfg.en_scoreboard) scoreboard = fabric_scoreboard::type_id::create("scoreboard", this);

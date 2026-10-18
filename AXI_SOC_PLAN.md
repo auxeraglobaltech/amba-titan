@@ -18,7 +18,7 @@
 | # | Command | Expect | Status |
 |---|---|---|---|
 | SIM-1 | `source uvm/sim/env.sh && uvm/bridge_tb/run.sh` | `BRIDGE TB PASSED` | ✅ 2026-10-18 (run 2): 324 reads, 338 writes, 32 error responses on host0; 60 AXI bursts on host1; 0 errors. Run 1 failed on a TB driver-alignment bug, since fixed |
-| SIM-3 | `uvm/sim/run.sh fw_hello` | `RESULT: PASSED` (TB builds; chip boots from the hex ROM; firmware log in run.log) | ⏳ requested 2026-10-18 |
+| SIM-3 | `uvm/sim/run.sh fw_hello` then `uvm/sim/regress.sh` | 7/7 `RESULT: PASSED` | 🟡 run 1 (2026-10-18): **6/7 passed** on first boot (fw_hello, fw_gpio_out, fw_timer_irq, axi_sram_rw, axi_csr_reset, axi_decerr; ~19-23k fabric transactions matched per test, 10 DECERR in axi_decerr). fw_uart_tx failed: AST oscillators were uncalibrated (IO 25.7 MHz vs 96), so UART ran at ~268 kbaud. Fixed in crt0 (REGAL write); **re-run requested** |
 | SIM-2 | `uvm/sim/elab_rtl.sh` | `RESULT: PASSED` (full chip elaborates on Xcelium) | ✅ 2026-10-18, 42 s, 0 errors; warnings only DEFFIN (PULP deferred `final` assert) and XPWDIS (xprop note, same as upstream) |
 **Decisions taken:** full Earl Grey (every IP kept), DUT RTL in a third folder
 `rtl/`, PULP `axi` library for crossbar + CDC, old TB archived to a branch then
