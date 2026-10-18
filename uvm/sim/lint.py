@@ -6,7 +6,7 @@ multi-minute xrun build.  It does not replace xrun: slang and Xcelium differ
 in places, and xrun has the final word.
 
   uvm/sim/lint.py --top tb_bridge uvm/bridge_tb/files.f
-  uvm/sim/lint.py --top tb_top -D TITAN_SIM uvm/sim/chip.f
+  uvm/sim/lint.py --top tb_top --uvm -D TITAN_SIM rtl/flist/rtl.f uvm/sim/uvm.f
 
 Exit status 0 = no errors.
 """
@@ -47,10 +47,19 @@ def main():
     ap.add_argument("--top", required=True)
     ap.add_argument("-D", dest="defines", action="append", default=[])
     ap.add_argument("--max-errors", type=int, default=50)
+    ap.add_argument("--uvm", action="store_true", help="compile the UVM library first")
+    # Open-source UVM (Cadence's CDNS-1.2 has encrypted parts slang cannot read):
+    #   git clone --depth 1 https://github.com/accellera-official/uvm-core .tools/uvm-core
+    ap.add_argument("--uvm-src", default=str(ROOT / ".tools/uvm-core/src"),
+                    help="UVM 1.2 source directory (contains uvm_pkg.sv)")
     args = ap.parse_args()
 
     env = dict(os.environ, TITAN_ROOT=str(ROOT))
     files, incs, defs = [], [], list(args.defines)
+    if args.uvm:
+        incs.append(args.uvm_src)
+        files.append(f"{args.uvm_src}/uvm_pkg.sv")
+        defs += ["UVM_NO_DPI", "UVM_REGEX_NO_DPI"]
     for f in args.flists:
         expand(f, env, files, incs, defs)
 

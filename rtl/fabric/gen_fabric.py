@@ -424,7 +424,13 @@ def main():
     OUT_JSON.write_text(json.dumps({
         "generated_by": "rtl/fabric/gen_fabric.py",
         "fabric_module": "titan_axi_fabric",
-        "host_id_width": None,  # see titan_axi_pkg
+        # Host index on xbar_main = the ID bits the crossbar prepends (MSBs of a
+        # device-side ID).
+        "main_hosts": MAIN_HOSTS + [SIM_HOST],
+        # Which main-side devices each host may reach; anything else is DECERR.
+        # Peri devices are reachable by whoever reaches "peri".
+        "connectivity": {h: [d for d in main_ports + [SIM_CTRL] if connected(h, d)]
+                         for h in MAIN_HOSTS + [SIM_HOST]},
         "ports": ports_json,
     }, indent=2) + "\n")
     print(f"{OUT_SV.relative_to(ROOT)}: {len(MAIN_HOSTS)}+1 hosts, {nmain - 1}+1 main devices, "

@@ -26,3 +26,6 @@ __pycache__/
 
 # Local leftovers of the archived TL-UL environment (see branch legacy-earlgrey-tlul)
 /_legacy_local/
+
+# Lint-only tools (uvm/sim/lint.py): open-source UVM for slang
+/.tools/

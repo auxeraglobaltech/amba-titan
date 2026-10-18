@@ -1,0 +1,11 @@
+# uvm/sim/tests.list — every runnable test.
+#   name              UVM test (uvm/tests/)   firmware (firmware/tests/<name>.c)
+# Add a line here to make a new test runnable with run.sh / regress.sh.
+
+axi_sram_rw         axi_sram_rw_test        idle
+axi_csr_reset       axi_csr_reset_test      idle
+axi_decerr          axi_decerr_test         idle
+fw_hello            fw_test                 hello
+fw_gpio_out         fw_gpio_out_test        gpio_out
+fw_uart_tx          fw_uart_tx_test         uart_tx
+fw_timer_irq        fw_test                 timer_irq
