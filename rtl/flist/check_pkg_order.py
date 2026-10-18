@@ -4,11 +4,15 @@ import os, re, sys
 root = os.environ.get("TITAN_ROOT", os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 seen, bad = set(), 0
 files = []
-for f in sys.argv[1:]:
+def read(f):
     for line in open(f):
-        line = line.strip()
-        if line.endswith(".sv") and not line.startswith("//"):
-            files.append(line.replace("${TITAN_ROOT}", root))
+        line = line.strip().replace("${TITAN_ROOT}", root)
+        if line.startswith("-f "):
+            read(line[3:].strip())
+        elif line.endswith(".sv") and not line.startswith("//"):
+            files.append(line)
+for f in sys.argv[1:]:
+    read(f)
 pkgs = {}
 for p in files:
     t = open(p, errors="ignore").read()

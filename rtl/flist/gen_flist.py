@@ -101,13 +101,36 @@ def main():
         # on a tie, take the earlgrey one.
         def other_top(c):
             return any(part.startswith("top_") and part != "top_earlgrey" for part in c.parts)
-        return max(cands, key=lambda c: (score(c), not other_top(c)))
+        return max(cands, key=lambda c: (score(c), not other_top(c), "top_earlgrey" in c.parts))
 
     # --- module closure from the roots --------------------------------------
     defs = {}             # name -> work file (first definition in .scr order wins)
     for f in sources:
         for name in DECL_RE.findall(f.read_text(errors="ignore")):
             defs.setdefault(name, f)
+
+    def resolve_include(name, from_file):
+        for d in incdirs + [from_file.parent]:
+            if (d / name).is_file():
+                return d / name
+        return None
+
+    # Words a file can reach include the macros it pulls in: `PRIM_FLOP_SPARSE_FSM
+    # instantiates prim_sparse_fsm_flop without the name appearing in the source.
+    word_cache = {}
+    def words_of(path, seen=None):
+        if path in word_cache:
+            return word_cache[path]
+        seen = seen or set()
+        seen.add(path)
+        text = path.read_text(errors="ignore")
+        words = set(WORD_RE.findall(strip_comments(text)))
+        for inc in INCL_RE.findall(text):
+            hit = resolve_include(inc, path)
+            if hit and hit not in seen:
+                words |= words_of(hit, seen)
+        word_cache[path] = words
+        return words
 
     drop = {d for d in args.drop.split(",") if d}
     need, todo = set(), [r for r in args.root.split(",") if r]
@@ -119,7 +142,7 @@ def main():
         if name in need or name in drop:
             continue
         need.add(name)
-        words = set(WORD_RE.findall(strip_comments(defs[name].read_text(errors="ignore"))))
+        words = words_of(defs[name])
         todo.extend(w for w in words if w in defs and w not in need)
 
     omit = {o for o in args.omit.split(",") if o}

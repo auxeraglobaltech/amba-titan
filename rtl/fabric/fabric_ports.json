@@ -1,0 +1,938 @@
+{
+  "generated_by": "rtl/fabric/gen_fabric.py",
+  "fabric_module": "titan_axi_fabric",
+  "host_id_width": null,
+  "ports": [
+    {
+      "name": "host.rv_core_ibex.corei",
+      "kind": "host",
+      "req": "main_host_req[0]",
+      "rsp": "main_host_rsp[0]",
+      "clock": "clk_main_i",
+      "reset": "rst_main_ni",
+      "id": "host",
+      "xbar": null,
+      "sim_only": false,
+      "ranges": []
+    },
+    {
+      "name": "host.rv_core_ibex.cored",
+      "kind": "host",
+      "req": "main_host_req[1]",
+      "rsp": "main_host_rsp[1]",
+      "clock": "clk_main_i",
+      "reset": "rst_main_ni",
+      "id": "host",
+      "xbar": null,
+      "sim_only": false,
+      "ranges": []
+    },
+    {
+      "name": "host.rv_dm.sba",
+      "kind": "host",
+      "req": "main_host_req[2]",
+      "rsp": "main_host_rsp[2]",
+      "clock": "clk_main_i",
+      "reset": "rst_main_ni",
+      "id": "host",
+      "xbar": null,
+      "sim_only": false,
+      "ranges": []
+    },
+    {
+      "name": "host.sim_host",
+      "kind": "host",
+      "req": "sim_host_req",
+      "rsp": "sim_host_rsp",
+      "clock": "clk_main_i",
+      "reset": "rst_main_ni",
+      "id": "host",
+      "xbar": null,
+      "sim_only": true,
+      "ranges": []
+    },
+    {
+      "name": "dev.rv_dm.regs",
+      "kind": "dev",
+      "req": "main_dev_req[MainDevRvDmRegs]",
+      "rsp": "main_dev_rsp[MainDevRvDmRegs]",
+      "clock": "clk_main_i",
+      "reset": "rst_main_ni",
+      "id": "dev",
+      "xbar": "main",
+      "sim_only": false,
+      "ranges": [
+        [
+          "0x41200000",
+          "0x41200010"
+        ]
+      ]
+    },
+    {
+      "name": "dev.rv_dm.mem",
+      "kind": "dev",
+      "req": "main_dev_req[MainDevRvDmMem]",
+      "rsp": "main_dev_rsp[MainDevRvDmMem]",
+      "clock": "clk_main_i",
+      "reset": "rst_main_ni",
+      "id": "dev",
+      "xbar": "main",
+      "sim_only": false,
+      "ranges": [
+        [
+          "0x00010000",
+          "0x00011000"
+        ]
+      ]
+    },
+    {
+      "name": "dev.rom_ctrl.rom",
+      "kind": "dev",
+      "req": "main_dev_req[MainDevRomCtrlRom]",
+      "rsp": "main_dev_rsp[MainDevRomCtrlRom]",
+      "clock": "clk_main_i",
+      "reset": "rst_main_ni",
+      "id": "dev",
+      "xbar": "main",
+      "sim_only": false,
+      "ranges": [
+        [
+          "0x00008000",
+          "0x00010000"
+        ]
+      ]
+    },
+    {
+      "name": "dev.rom_ctrl.regs",
+      "kind": "dev",
+      "req": "main_dev_req[MainDevRomCtrlRegs]",
+      "rsp": "main_dev_rsp[MainDevRomCtrlRegs]",
+      "clock": "clk_main_i",
+      "reset": "rst_main_ni",
+      "id": "dev",
+      "xbar": "main",
+      "sim_only": false,
+      "ranges": [
+        [
+          "0x411e0000",
+          "0x411e0080"
+        ]
+      ]
+    },
+    {
+      "name": "link.main_to_peri",
+      "kind": "link",
+      "req": "peri_host_req",
+      "rsp": "peri_host_rsp",
+      "clock": "clk_fixed_i",
+      "reset": "rst_fixed_ni",
+      "id": "dev",
+      "xbar": null,
+      "sim_only": false,
+      "ranges": []
+    },
+    {
+      "name": "dev.spi_host0",
+      "kind": "dev",
+      "req": "spi_host0_req",
+      "rsp": "spi_host0_rsp",
+      "clock": "clk_spi_host0_i",
+      "reset": "rst_spi_host0_ni",
+      "id": "dev",
+      "xbar": "main",
+      "sim_only": false,
+      "ranges": [
+        [
+          "0x40300000",
+          "0x40300040"
+        ]
+      ]
+    },
+    {
+      "name": "dev.spi_host1",
+      "kind": "dev",
+      "req": "spi_host1_req",
+      "rsp": "spi_host1_rsp",
+      "clock": "clk_spi_host1_i",
+      "reset": "rst_spi_host1_ni",
+      "id": "dev",
+      "xbar": "main",
+      "sim_only": false,
+      "ranges": [
+        [
+          "0x40310000",
+          "0x40310040"
+        ]
+      ]
+    },
+    {
+      "name": "dev.usbdev",
+      "kind": "dev",
+      "req": "usbdev_req",
+      "rsp": "usbdev_rsp",
+      "clock": "clk_usb_i",
+      "reset": "rst_usb_ni",
+      "id": "dev",
+      "xbar": "main",
+      "sim_only": false,
+      "ranges": [
+        [
+          "0x40320000",
+          "0x40321000"
+        ]
+      ]
+    },
+    {
+      "name": "dev.flash_ctrl.core",
+      "kind": "dev",
+      "req": "main_dev_req[MainDevFlashCtrlCore]",
+      "rsp": "main_dev_rsp[MainDevFlashCtrlCore]",
+      "clock": "clk_main_i",
+      "reset": "rst_main_ni",
+      "id": "dev",
+      "xbar": "main",
+      "sim_only": false,
+      "ranges": [
+        [
+          "0x41000000",
+          "0x41000200"
+        ]
+      ]
+    },
+    {
+      "name": "dev.flash_ctrl.prim",
+      "kind": "dev",
+      "req": "main_dev_req[MainDevFlashCtrlPrim]",
+      "rsp": "main_dev_rsp[MainDevFlashCtrlPrim]",
+      "clock": "clk_main_i",
+      "reset": "rst_main_ni",
+      "id": "dev",
+      "xbar": "main",
+      "sim_only": false,
+      "ranges": [
+        [
+          "0x41008000",
+          "0x41008080"
+        ]
+      ]
+    },
+    {
+      "name": "dev.flash_ctrl.mem",
+      "kind": "dev",
+      "req": "main_dev_req[MainDevFlashCtrlMem]",
+      "rsp": "main_dev_rsp[MainDevFlashCtrlMem]",
+      "clock": "clk_main_i",
+      "reset": "rst_main_ni",
+      "id": "dev",
+      "xbar": "main",
+      "sim_only": false,
+      "ranges": [
+        [
+          "0x20000000",
+          "0x20100000"
+        ]
+      ]
+    },
+    {
+      "name": "dev.hmac",
+      "kind": "dev",
+      "req": "main_dev_req[MainDevHmac]",
+      "rsp": "main_dev_rsp[MainDevHmac]",
+      "clock": "clk_main_i",
+      "reset": "rst_main_ni",
+      "id": "dev",
+      "xbar": "main",
+      "sim_only": false,
+      "ranges": [
+        [
+          "0x41110000",
+          "0x41112000"
+        ]
+      ]
+    },
+    {
+      "name": "dev.kmac",
+      "kind": "dev",
+      "req": "main_dev_req[MainDevKmac]",
+      "rsp": "main_dev_rsp[MainDevKmac]",
+      "clock": "clk_main_i",
+      "reset": "rst_main_ni",
+      "id": "dev",
+      "xbar": "main",
+      "sim_only": false,
+      "ranges": [
+        [
+          "0x41120000",
+          "0x41121000"
+        ]
+      ]
+    },
+    {
+      "name": "dev.aes",
+      "kind": "dev",
+      "req": "main_dev_req[MainDevAes]",
+      "rsp": "main_dev_rsp[MainDevAes]",
+      "clock": "clk_main_i",
+      "reset": "rst_main_ni",
+      "id": "dev",
+      "xbar": "main",
+      "sim_only": false,
+      "ranges": [
+        [
+          "0x41100000",
+          "0x41100100"
+        ]
+      ]
+    },
+    {
+      "name": "dev.entropy_src",
+      "kind": "dev",
+      "req": "main_dev_req[MainDevEntropySrc]",
+      "rsp": "main_dev_rsp[MainDevEntropySrc]",
+      "clock": "clk_main_i",
+      "reset": "rst_main_ni",
+      "id": "dev",
+      "xbar": "main",
+      "sim_only": false,
+      "ranges": [
+        [
+          "0x41160000",
+          "0x41160100"
+        ]
+      ]
+    },
+    {
+      "name": "dev.csrng",
+      "kind": "dev",
+      "req": "main_dev_req[MainDevCsrng]",
+      "rsp": "main_dev_rsp[MainDevCsrng]",
+      "clock": "clk_main_i",
+      "reset": "rst_main_ni",
+      "id": "dev",
+      "xbar": "main",
+      "sim_only": false,
+      "ranges": [
+        [
+          "0x41150000",
+          "0x41150080"
+        ]
+      ]
+    },
+    {
+      "name": "dev.edn0",
+      "kind": "dev",
+      "req": "main_dev_req[MainDevEdn0]",
+      "rsp": "main_dev_rsp[MainDevEdn0]",
+      "clock": "clk_main_i",
+      "reset": "rst_main_ni",
+      "id": "dev",
+      "xbar": "main",
+      "sim_only": false,
+      "ranges": [
+        [
+          "0x41170000",
+          "0x41170080"
+        ]
+      ]
+    },
+    {
+      "name": "dev.edn1",
+      "kind": "dev",
+      "req": "main_dev_req[MainDevEdn1]",
+      "rsp": "main_dev_rsp[MainDevEdn1]",
+      "clock": "clk_main_i",
+      "reset": "rst_main_ni",
+      "id": "dev",
+      "xbar": "main",
+      "sim_only": false,
+      "ranges": [
+        [
+          "0x41180000",
+          "0x41180080"
+        ]
+      ]
+    },
+    {
+      "name": "dev.rv_plic",
+      "kind": "dev",
+      "req": "main_dev_req[MainDevRvPlic]",
+      "rsp": "main_dev_rsp[MainDevRvPlic]",
+      "clock": "clk_main_i",
+      "reset": "rst_main_ni",
+      "id": "dev",
+      "xbar": "main",
+      "sim_only": false,
+      "ranges": [
+        [
+          "0x48000000",
+          "0x50000000"
+        ]
+      ]
+    },
+    {
+      "name": "dev.otbn",
+      "kind": "dev",
+      "req": "main_dev_req[MainDevOtbn]",
+      "rsp": "main_dev_rsp[MainDevOtbn]",
+      "clock": "clk_main_i",
+      "reset": "rst_main_ni",
+      "id": "dev",
+      "xbar": "main",
+      "sim_only": false,
+      "ranges": [
+        [
+          "0x41130000",
+          "0x41140000"
+        ]
+      ]
+    },
+    {
+      "name": "dev.keymgr",
+      "kind": "dev",
+      "req": "main_dev_req[MainDevKeymgr]",
+      "rsp": "main_dev_rsp[MainDevKeymgr]",
+      "clock": "clk_main_i",
+      "reset": "rst_main_ni",
+      "id": "dev",
+      "xbar": "main",
+      "sim_only": false,
+      "ranges": [
+        [
+          "0x41140000",
+          "0x41140100"
+        ]
+      ]
+    },
+    {
+      "name": "dev.rv_core_ibex.cfg",
+      "kind": "dev",
+      "req": "main_dev_req[MainDevRvCoreIbexCfg]",
+      "rsp": "main_dev_rsp[MainDevRvCoreIbexCfg]",
+      "clock": "clk_main_i",
+      "reset": "rst_main_ni",
+      "id": "dev",
+      "xbar": "main",
+      "sim_only": false,
+      "ranges": [
+        [
+          "0x411f0000",
+          "0x411f0080"
+        ],
+        [
+          "0x411f00a0",
+          "0x411f0100"
+        ]
+      ]
+    },
+    {
+      "name": "dev.sram_ctrl_main.regs",
+      "kind": "dev",
+      "req": "main_dev_req[MainDevSramCtrlMainRegs]",
+      "rsp": "main_dev_rsp[MainDevSramCtrlMainRegs]",
+      "clock": "clk_main_i",
+      "reset": "rst_main_ni",
+      "id": "dev",
+      "xbar": "main",
+      "sim_only": false,
+      "ranges": [
+        [
+          "0x411c0000",
+          "0x411c0040"
+        ]
+      ]
+    },
+    {
+      "name": "dev.sram_ctrl_main.ram",
+      "kind": "dev",
+      "req": "main_dev_req[MainDevSramCtrlMainRam]",
+      "rsp": "main_dev_rsp[MainDevSramCtrlMainRam]",
+      "clock": "clk_main_i",
+      "reset": "rst_main_ni",
+      "id": "dev",
+      "xbar": "main",
+      "sim_only": false,
+      "ranges": [
+        [
+          "0x10000000",
+          "0x10020000"
+        ]
+      ]
+    },
+    {
+      "name": "dev.titan_sim_ctrl",
+      "kind": "dev",
+      "req": "main_dev_req[MainDevSimCtrl]",
+      "rsp": "main_dev_rsp[MainDevSimCtrl]",
+      "clock": "clk_main_i",
+      "reset": "rst_main_ni",
+      "id": "dev",
+      "xbar": "main",
+      "sim_only": true,
+      "ranges": [
+        [
+          "0x411f0080",
+          "0x411f00a0"
+        ]
+      ]
+    },
+    {
+      "name": "dev.uart0",
+      "kind": "dev",
+      "req": "peri_dev_req[PeriDevUart0]",
+      "rsp": "peri_dev_rsp[PeriDevUart0]",
+      "clock": "clk_fixed_i",
+      "reset": "rst_fixed_ni",
+      "id": "dev",
+      "xbar": "peri",
+      "sim_only": false,
+      "ranges": [
+        [
+          "0x40000000",
+          "0x40000040"
+        ]
+      ]
+    },
+    {
+      "name": "dev.uart1",
+      "kind": "dev",
+      "req": "peri_dev_req[PeriDevUart1]",
+      "rsp": "peri_dev_rsp[PeriDevUart1]",
+      "clock": "clk_fixed_i",
+      "reset": "rst_fixed_ni",
+      "id": "dev",
+      "xbar": "peri",
+      "sim_only": false,
+      "ranges": [
+        [
+          "0x40010000",
+          "0x40010040"
+        ]
+      ]
+    },
+    {
+      "name": "dev.uart2",
+      "kind": "dev",
+      "req": "peri_dev_req[PeriDevUart2]",
+      "rsp": "peri_dev_rsp[PeriDevUart2]",
+      "clock": "clk_fixed_i",
+      "reset": "rst_fixed_ni",
+      "id": "dev",
+      "xbar": "peri",
+      "sim_only": false,
+      "ranges": [
+        [
+          "0x40020000",
+          "0x40020040"
+        ]
+      ]
+    },
+    {
+      "name": "dev.uart3",
+      "kind": "dev",
+      "req": "peri_dev_req[PeriDevUart3]",
+      "rsp": "peri_dev_rsp[PeriDevUart3]",
+      "clock": "clk_fixed_i",
+      "reset": "rst_fixed_ni",
+      "id": "dev",
+      "xbar": "peri",
+      "sim_only": false,
+      "ranges": [
+        [
+          "0x40030000",
+          "0x40030040"
+        ]
+      ]
+    },
+    {
+      "name": "dev.i2c0",
+      "kind": "dev",
+      "req": "peri_dev_req[PeriDevI2c0]",
+      "rsp": "peri_dev_rsp[PeriDevI2c0]",
+      "clock": "clk_fixed_i",
+      "reset": "rst_fixed_ni",
+      "id": "dev",
+      "xbar": "peri",
+      "sim_only": false,
+      "ranges": [
+        [
+          "0x40080000",
+          "0x40080080"
+        ]
+      ]
+    },
+    {
+      "name": "dev.i2c1",
+      "kind": "dev",
+      "req": "peri_dev_req[PeriDevI2c1]",
+      "rsp": "peri_dev_rsp[PeriDevI2c1]",
+      "clock": "clk_fixed_i",
+      "reset": "rst_fixed_ni",
+      "id": "dev",
+      "xbar": "peri",
+      "sim_only": false,
+      "ranges": [
+        [
+          "0x40090000",
+          "0x40090080"
+        ]
+      ]
+    },
+    {
+      "name": "dev.i2c2",
+      "kind": "dev",
+      "req": "peri_dev_req[PeriDevI2c2]",
+      "rsp": "peri_dev_rsp[PeriDevI2c2]",
+      "clock": "clk_fixed_i",
+      "reset": "rst_fixed_ni",
+      "id": "dev",
+      "xbar": "peri",
+      "sim_only": false,
+      "ranges": [
+        [
+          "0x400a0000",
+          "0x400a0080"
+        ]
+      ]
+    },
+    {
+      "name": "dev.pattgen",
+      "kind": "dev",
+      "req": "peri_dev_req[PeriDevPattgen]",
+      "rsp": "peri_dev_rsp[PeriDevPattgen]",
+      "clock": "clk_fixed_i",
+      "reset": "rst_fixed_ni",
+      "id": "dev",
+      "xbar": "peri",
+      "sim_only": false,
+      "ranges": [
+        [
+          "0x400e0000",
+          "0x400e0040"
+        ]
+      ]
+    },
+    {
+      "name": "dev.pwm_aon",
+      "kind": "dev",
+      "req": "peri_dev_req[PeriDevPwmAon]",
+      "rsp": "peri_dev_rsp[PeriDevPwmAon]",
+      "clock": "clk_fixed_i",
+      "reset": "rst_fixed_ni",
+      "id": "dev",
+      "xbar": "peri",
+      "sim_only": false,
+      "ranges": [
+        [
+          "0x40450000",
+          "0x40450080"
+        ]
+      ]
+    },
+    {
+      "name": "dev.gpio",
+      "kind": "dev",
+      "req": "peri_dev_req[PeriDevGpio]",
+      "rsp": "peri_dev_rsp[PeriDevGpio]",
+      "clock": "clk_fixed_i",
+      "reset": "rst_fixed_ni",
+      "id": "dev",
+      "xbar": "peri",
+      "sim_only": false,
+      "ranges": [
+        [
+          "0x40040000",
+          "0x40040080"
+        ]
+      ]
+    },
+    {
+      "name": "dev.spi_device",
+      "kind": "dev",
+      "req": "peri_dev_req[PeriDevSpiDevice]",
+      "rsp": "peri_dev_rsp[PeriDevSpiDevice]",
+      "clock": "clk_fixed_i",
+      "reset": "rst_fixed_ni",
+      "id": "dev",
+      "xbar": "peri",
+      "sim_only": false,
+      "ranges": [
+        [
+          "0x40050000",
+          "0x40052000"
+        ]
+      ]
+    },
+    {
+      "name": "dev.rv_timer",
+      "kind": "dev",
+      "req": "peri_dev_req[PeriDevRvTimer]",
+      "rsp": "peri_dev_rsp[PeriDevRvTimer]",
+      "clock": "clk_fixed_i",
+      "reset": "rst_fixed_ni",
+      "id": "dev",
+      "xbar": "peri",
+      "sim_only": false,
+      "ranges": [
+        [
+          "0x40100000",
+          "0x40100200"
+        ]
+      ]
+    },
+    {
+      "name": "dev.pwrmgr_aon",
+      "kind": "dev",
+      "req": "peri_dev_req[PeriDevPwrmgrAon]",
+      "rsp": "peri_dev_rsp[PeriDevPwrmgrAon]",
+      "clock": "clk_fixed_i",
+      "reset": "rst_fixed_ni",
+      "id": "dev",
+      "xbar": "peri",
+      "sim_only": false,
+      "ranges": [
+        [
+          "0x40400000",
+          "0x40400080"
+        ]
+      ]
+    },
+    {
+      "name": "dev.rstmgr_aon",
+      "kind": "dev",
+      "req": "peri_dev_req[PeriDevRstmgrAon]",
+      "rsp": "peri_dev_rsp[PeriDevRstmgrAon]",
+      "clock": "clk_fixed_i",
+      "reset": "rst_fixed_ni",
+      "id": "dev",
+      "xbar": "peri",
+      "sim_only": false,
+      "ranges": [
+        [
+          "0x40410000",
+          "0x40410080"
+        ]
+      ]
+    },
+    {
+      "name": "dev.clkmgr_aon",
+      "kind": "dev",
+      "req": "peri_dev_req[PeriDevClkmgrAon]",
+      "rsp": "peri_dev_rsp[PeriDevClkmgrAon]",
+      "clock": "clk_fixed_i",
+      "reset": "rst_fixed_ni",
+      "id": "dev",
+      "xbar": "peri",
+      "sim_only": false,
+      "ranges": [
+        [
+          "0x40420000",
+          "0x40420080"
+        ]
+      ]
+    },
+    {
+      "name": "dev.pinmux_aon",
+      "kind": "dev",
+      "req": "peri_dev_req[PeriDevPinmuxAon]",
+      "rsp": "peri_dev_rsp[PeriDevPinmuxAon]",
+      "clock": "clk_fixed_i",
+      "reset": "rst_fixed_ni",
+      "id": "dev",
+      "xbar": "peri",
+      "sim_only": false,
+      "ranges": [
+        [
+          "0x40460000",
+          "0x40461000"
+        ]
+      ]
+    },
+    {
+      "name": "dev.otp_ctrl.core",
+      "kind": "dev",
+      "req": "peri_dev_req[PeriDevOtpCtrlCore]",
+      "rsp": "peri_dev_rsp[PeriDevOtpCtrlCore]",
+      "clock": "clk_fixed_i",
+      "reset": "rst_fixed_ni",
+      "id": "dev",
+      "xbar": "peri",
+      "sim_only": false,
+      "ranges": [
+        [
+          "0x40130000",
+          "0x40131000"
+        ]
+      ]
+    },
+    {
+      "name": "dev.otp_macro.prim",
+      "kind": "dev",
+      "req": "peri_dev_req[PeriDevOtpMacroPrim]",
+      "rsp": "peri_dev_rsp[PeriDevOtpMacroPrim]",
+      "clock": "clk_fixed_i",
+      "reset": "rst_fixed_ni",
+      "id": "dev",
+      "xbar": "peri",
+      "sim_only": false,
+      "ranges": [
+        [
+          "0x40138000",
+          "0x40138020"
+        ]
+      ]
+    },
+    {
+      "name": "dev.lc_ctrl.regs",
+      "kind": "dev",
+      "req": "peri_dev_req[PeriDevLcCtrlRegs]",
+      "rsp": "peri_dev_rsp[PeriDevLcCtrlRegs]",
+      "clock": "clk_fixed_i",
+      "reset": "rst_fixed_ni",
+      "id": "dev",
+      "xbar": "peri",
+      "sim_only": false,
+      "ranges": [
+        [
+          "0x40140000",
+          "0x40140100"
+        ]
+      ]
+    },
+    {
+      "name": "dev.sensor_ctrl_aon",
+      "kind": "dev",
+      "req": "peri_dev_req[PeriDevSensorCtrlAon]",
+      "rsp": "peri_dev_rsp[PeriDevSensorCtrlAon]",
+      "clock": "clk_fixed_i",
+      "reset": "rst_fixed_ni",
+      "id": "dev",
+      "xbar": "peri",
+      "sim_only": false,
+      "ranges": [
+        [
+          "0x40490000",
+          "0x40490080"
+        ]
+      ]
+    },
+    {
+      "name": "dev.alert_handler",
+      "kind": "dev",
+      "req": "peri_dev_req[PeriDevAlertHandler]",
+      "rsp": "peri_dev_rsp[PeriDevAlertHandler]",
+      "clock": "clk_fixed_i",
+      "reset": "rst_fixed_ni",
+      "id": "dev",
+      "xbar": "peri",
+      "sim_only": false,
+      "ranges": [
+        [
+          "0x40150000",
+          "0x40150800"
+        ]
+      ]
+    },
+    {
+      "name": "dev.sram_ctrl_ret_aon.regs",
+      "kind": "dev",
+      "req": "peri_dev_req[PeriDevSramCtrlRetAonRegs]",
+      "rsp": "peri_dev_rsp[PeriDevSramCtrlRetAonRegs]",
+      "clock": "clk_fixed_i",
+      "reset": "rst_fixed_ni",
+      "id": "dev",
+      "xbar": "peri",
+      "sim_only": false,
+      "ranges": [
+        [
+          "0x40500000",
+          "0x40500040"
+        ]
+      ]
+    },
+    {
+      "name": "dev.sram_ctrl_ret_aon.ram",
+      "kind": "dev",
+      "req": "peri_dev_req[PeriDevSramCtrlRetAonRam]",
+      "rsp": "peri_dev_rsp[PeriDevSramCtrlRetAonRam]",
+      "clock": "clk_fixed_i",
+      "reset": "rst_fixed_ni",
+      "id": "dev",
+      "xbar": "peri",
+      "sim_only": false,
+      "ranges": [
+        [
+          "0x40600000",
+          "0x40601000"
+        ]
+      ]
+    },
+    {
+      "name": "dev.aon_timer_aon",
+      "kind": "dev",
+      "req": "peri_dev_req[PeriDevAonTimerAon]",
+      "rsp": "peri_dev_rsp[PeriDevAonTimerAon]",
+      "clock": "clk_fixed_i",
+      "reset": "rst_fixed_ni",
+      "id": "dev",
+      "xbar": "peri",
+      "sim_only": false,
+      "ranges": [
+        [
+          "0x40470000",
+          "0x40470040"
+        ]
+      ]
+    },
+    {
+      "name": "dev.sysrst_ctrl_aon",
+      "kind": "dev",
+      "req": "peri_dev_req[PeriDevSysrstCtrlAon]",
+      "rsp": "peri_dev_rsp[PeriDevSysrstCtrlAon]",
+      "clock": "clk_fixed_i",
+      "reset": "rst_fixed_ni",
+      "id": "dev",
+      "xbar": "peri",
+      "sim_only": false,
+      "ranges": [
+        [
+          "0x40430000",
+          "0x40430100"
+        ]
+      ]
+    },
+    {
+      "name": "dev.adc_ctrl_aon",
+      "kind": "dev",
+      "req": "peri_dev_req[PeriDevAdcCtrlAon]",
+      "rsp": "peri_dev_rsp[PeriDevAdcCtrlAon]",
+      "clock": "clk_fixed_i",
+      "reset": "rst_fixed_ni",
+      "id": "dev",
+      "xbar": "peri",
+      "sim_only": false,
+      "ranges": [
+        [
+          "0x40440000",
+          "0x40440080"
+        ]
+      ]
+    },
+    {
+      "name": "dev.ast",
+      "kind": "dev",
+      "req": "peri_dev_req[PeriDevAst]",
+      "rsp": "peri_dev_rsp[PeriDevAst]",
+      "clock": "clk_fixed_i",
+      "reset": "rst_fixed_ni",
+      "id": "dev",
+      "xbar": "peri",
+      "sim_only": false,
+      "ranges": [
+        [
+          "0x40480000",
+          "0x40480400"
+        ]
+      ]
+    }
+  ]
+}
