@@ -29,6 +29,7 @@
 #define TITAN_SIM_CTRL_BASE   (TOP_EARLGREY_RV_CORE_IBEX_CFG_BASE_ADDR + 0x80)
 #define TITAN_SIM_CTRL_STATUS 0x0   // write a TITAN_STATUS_* value
 #define TITAN_SIM_CTRL_LOG    0x4   // write one character
+#define TITAN_SIM_CTRL_SYNC   0x8   // write a step number (see titan_sync)
 
 // Same values as OpenTitan's sw_test_status_t, so waves read the same.
 #define TITAN_STATUS_IN_TEST 0x4354u
@@ -43,6 +44,10 @@ void titan_puts(const char *s);
 // RV32), so uint32_t works with %u/%x as-is. No GCC format checking: this
 // toolchain makes uint32_t 'unsigned long', which it would reject for %x.
 void titan_printf(const char *fmt, ...);
+
+// Tell the testbench "I have reached step n" (n > 0). A UVM test waits for it
+// with env.sw.wait_sync(n) and then does its part (drive pins, sample a clock).
+void titan_sync(uint32_t n);
 
 // End the test now. Never return.
 void titan_pass(void) __attribute__((noreturn));
@@ -100,6 +105,18 @@ void timer_set_deadline_us(uint64_t when);
 void timer_irq_enable(bool on);
 void timer_irq_ack(void);
 void delay_us(uint32_t us);
+
+// rstmgr / pwrmgr / clkmgr / aon_timer (reset and clock tests)
+#define RESET_INFO_POR       BIT(0)    // power-on reset
+#define RESET_INFO_SW_RESET  BIT(2)    // rstmgr RESET_REQ
+#define RESET_INFO_HW_REQ(i) BIT(3 + (i))  // pwrmgr reset request i (1 = aon_timer watchdog)
+uint32_t rstmgr_reset_info(void);
+void rstmgr_clear_reset_info(void);
+void rstmgr_request_sw_reset(void) __attribute__((noreturn));
+void pwrmgr_enable_reset_request(uint32_t idx);   // then CDC-sync into the AON domain
+void clkmgr_peri_clock_enable(uint32_t bit, bool on);  // CLKMGR_CLK_ENABLES_*_BIT
+void aon_wdog_start(uint32_t bark_cycles, uint32_t bite_cycles);  // AON clock cycles (200 kHz)
+void aon_wdog_stop(void);
 
 // irq.c
 void irq_global_enable(bool on);       // mstatus.MIE

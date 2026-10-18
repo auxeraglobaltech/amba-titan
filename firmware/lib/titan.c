@@ -17,6 +17,10 @@ void titan_puts(const char *s) {
   while (*s) titan_putc(*s++);
 }
 
+void titan_sync(uint32_t n) {
+  reg32_write(TITAN_SIM_CTRL_BASE, TITAN_SIM_CTRL_SYNC, n);
+}
+
 void titan_pass(void) {
   titan_set_status(TITAN_STATUS_PASSED);
   for (;;) wait_for_interrupt();

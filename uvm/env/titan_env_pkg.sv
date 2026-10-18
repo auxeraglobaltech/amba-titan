@@ -8,13 +8,15 @@
 //   ├── sw                 sw_status_monitor: firmware status + log, decoded from
 //   │                      AXI writes on dev.titan_sim_ctrl
 //   ├── uart0              uart_monitor on the chip's UART0 TX pad
-//   └── gpio               gpio_monitor on GPIO[7:0]
+//   ├── gpio               gpio_monitor on GPIO[7:0] (+ pad drive via gpio.vif)
+//   └── clk                clk_monitor on the clkmgr outputs
 
 package titan_env_pkg;
   import uvm_pkg::*;
   import axi_agent_pkg::*;
   import uart_agent_pkg::*;
   import gpio_agent_pkg::*;
+  import clk_agent_pkg::*;
   import titan_addr_map_pkg::*;
   `include "uvm_macros.svh"
 
@@ -36,13 +38,18 @@ package titan_env_pkg;
 
   // ===========================================================================
   // Firmware -> testbench channel. crt0 and lib/titan.c write
-  //   +0x0 STATUS (IN_TEST / PASSED / FAILED), +0x4 LOG (one character)
+  //   +0x0 STATUS (IN_TEST / PASSED / FAILED), +0x4 LOG (one character),
+  //   +0x8 SYNC (titan_sync(n): "firmware reached step n")
   // in titan_sim_ctrl; this subscriber listens to that port's AXI monitor.
+  // n_boots counts IN_TEST reports, i.e. how many times the chip booted.
   class sw_status_monitor extends uvm_subscriber #(axi_seq_item);
     `uvm_component_utils(sw_status_monitor)
 
-    bit [31:0] status;
+    bit [31:0]   status;
+    bit [31:0]   sync_value;
+    int unsigned n_boots;
     uvm_event  ev_in_test;     // firmware reached main()
+    uvm_event  ev_sync;        // any SYNC write
     uvm_event  ev_done;        // PASSED or FAILED written
     protected string line;
 
@@ -50,7 +57,13 @@ package titan_env_pkg;
       super.new(name, parent);
       ev_in_test = new("ev_in_test");
       ev_done    = new("ev_done");
+      ev_sync    = new("ev_sync");
     endfunction
+
+    // Block until the firmware has called titan_sync(n).
+    task wait_sync(bit [31:0] n);
+      while (sync_value != n) ev_sync.wait_trigger();
+    endtask
 
     function bit passed();
       return status == StatusPassed;
@@ -65,7 +78,9 @@ package titan_env_pkg;
             status = t.data[i];
             case (status)
               StatusInTest: begin
-                `uvm_info("SW", "firmware status: IN_TEST (main() started)", UVM_LOW)
+                n_boots++;
+                line = "";   // a reset can cut a log line short
+                `uvm_info("SW", $sformatf("firmware status: IN_TEST (main() started, boot %0d)", n_boots), UVM_LOW)
                 ev_in_test.trigger();
               end
               StatusPassed: begin
@@ -87,6 +102,11 @@ package titan_env_pkg;
             end else begin
               line = {line, string'(c)};
             end
+          end
+          32'h8: begin
+            sync_value = t.data[i];
+            `uvm_info("SW", $sformatf("firmware sync %0d", sync_value), UVM_MEDIUM)
+            ev_sync.trigger();
           end
           default: ;
         endcase
@@ -111,8 +131,9 @@ package titan_env_pkg;
     `uvm_component_utils(fabric_scoreboard)
 
     uvm_analysis_imp #(axi_seq_item, fabric_scoreboard) imp;
+    virtual axi_if         rst_vif;     // any clk_main port: its aresetn is the fabric reset
     protected axi_seq_item dev_q[string][$];
-    int unsigned n_matched, n_decerr, n_errors;
+    int unsigned n_matched, n_decerr, n_errors, n_resets;
 
     function new(string name, uvm_component parent);
       super.new(name, parent);
@@ -175,6 +196,20 @@ package titan_env_pkg;
         fail($sformatf("response changed in the fabric: %s", what));
     endfunction
 
+    // A chip reset aborts whatever is in flight: device-side transactions whose
+    // responses never reached a host are dropped (the monitors drop their
+    // half-finished ones the same way).
+    virtual task run_phase(uvm_phase phase);
+      if (rst_vif == null) return;
+      forever begin
+        @(negedge rst_vif.aresetn);
+        if ($time == 0) continue;
+        n_resets++;
+        dev_q.delete();
+        `uvm_info("FABRIC_SB", "fabric reset: in-flight transactions dropped", UVM_MEDIUM)
+      end
+    endtask
+
     virtual function void check_phase(uvm_phase phase);
       // Anything a device saw well before the end without a host twin is a
       // transaction the fabric invented or misrouted. (The last few may simply
@@ -185,8 +220,8 @@ package titan_env_pkg;
     endfunction
 
     virtual function void report_phase(uvm_phase phase);
-      `uvm_info("FABRIC_SB", $sformatf("%0d transactions matched host->device, %0d DECERR, %0d errors",
-                                       n_matched, n_decerr, n_errors), UVM_LOW)
+      `uvm_info("FABRIC_SB", $sformatf("%0d transactions matched host->device, %0d DECERR, %0d errors, %0d resets",
+                                       n_matched, n_decerr, n_errors, n_resets), UVM_LOW)
     endfunction
   endclass
 
@@ -200,6 +235,7 @@ package titan_env_pkg;
     sw_status_monitor  sw;
     uart_monitor       uart0;
     gpio_monitor       gpio;
+    clk_monitor        clk;
 
     function new(string name, uvm_component parent);
       super.new(name, parent);
@@ -232,12 +268,14 @@ package titan_env_pkg;
       sw    = sw_status_monitor::type_id::create("sw", this);
       uart0 = uart_monitor::type_id::create("uart0", this);
       gpio  = gpio_monitor::type_id::create("gpio", this);
+      clk   = clk_monitor::type_id::create("clk", this);
       uart0.baud = cfg.uart_baud;
     endfunction
 
     virtual function void connect_phase(uvm_phase phase);
       foreach (axi[port]) if (cfg.en_scoreboard) axi[port].monitor.ap.connect(scoreboard.imp);
       axi["dev.titan_sim_ctrl"].monitor.ap.connect(sw.analysis_export);
+      if (cfg.en_scoreboard) scoreboard.rst_vif = axi["host.rv_core_ibex.cored"].cfg.vif;
     endfunction
   endclass
 

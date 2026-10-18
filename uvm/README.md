@@ -14,7 +14,8 @@ tb_top
             ├── scoreboard       fabric_scoreboard
             ├── sw               sw_status_monitor (firmware status + log)
             ├── uart0            uart_monitor  (pad IOC4)
-            └── gpio             gpio_monitor  (pads IOB0..7)
+            ├── gpio             gpio_monitor  (pads IOB0..7; drive them via env.gpio.vif)
+            └── clk              clk_monitor   (clkmgr outputs: frequency, gating)
 ```
 
 ## Run
@@ -40,17 +41,19 @@ takes ~2.3 ms of simulated time before the CPU runs.
 
 ## The tests
 
-| Test | UVM test | Firmware | Proves |
-|---|---|---|---|
-| `axi_sram_rw` | `axi_sram_rw_test` | `idle` | UVM AXI master → xbar_main → bridge → main SRAM: words, a byte write, 2–16-beat bursts (split by the bridge) |
-| `axi_csr_reset` | `axi_csr_reset_test` | `idle` | reset values on both crossbars, through both CDCs |
-| `axi_decerr` | `axi_decerr_test` | `idle` | 5 address holes, read and write → DECERR |
-| `fw_hello` | `fw_test` | `hello` | the firmware flow end to end |
-| `fw_gpio_out` | `fw_gpio_out_test` | `gpio_out` | 17 GPIO patterns reach the pads, in order |
-| `fw_uart_tx` | `fw_uart_tx_test` | `uart_tx` | UART0 text at 1 Mbaud |
-| `fw_timer_irq` | `fw_test` | `timer_irq` | timer interrupt → Ibex → trap handler, 5 times |
+**Full test plan, one section per test: [`TESTS.md`](TESTS.md).**
 
-All 7 pass (2026-10-18). Each also checks ~19–23 thousand fabric transactions.
+| Area | Tests |
+|---|---|
+| Bring-up | `fw_hello` |
+| Interconnect | `axi_sram_rw`, `axi_csr_reset`, `axi_decerr` |
+| Memory map / memories | `axi_mem_map_sweep`, `axi_mem_test` |
+| Clocks | `clk_freq`, `fw_clk_gate` |
+| Reset | `fw_sw_reset`, `fw_wdog_reset` |
+| Interrupts | `fw_timer_irq`, `fw_plic_gpio_irq` |
+| Peripherals | `fw_gpio_out`, `fw_uart_tx` |
+
+14 tests. Each also checks ~20 thousand fabric transactions.
 
 ## How a test runs
 
@@ -73,7 +76,9 @@ All 7 pass (2026-10-18). Each also checks ~19–23 thousand fabric transactions.
 2. `uvm/sim/tests.list`: `my_test   fw_test   my_test`
 3. `uvm/sim/run.sh my_test`
 
-**C + testbench check** (the testbench must observe or drive pins):
+**C + testbench check** (the testbench must observe or drive pins, or act at
+a particular point of the firmware — the firmware calls `titan_sync(n)`, the
+test waits with `env.sw.wait_sync(n)`):
 1. the C file, as above
 2. in `uvm/tests/titan_test_pkg.sv`, a class extending `titan_base_test` whose
    `test_body()` calls `super.test_body()` (wait for the firmware) and then
@@ -93,8 +98,8 @@ All 7 pass (2026-10-18). Each also checks ~19–23 thousand fabric transactions.
 |---|---|
 | `axi_if` assertions | VALID stays high and payload stable until READY, on every port; no X on VALIDs |
 | `axi_monitor` | WLAST/RLAST agree with AxLEN; every B/R has an outstanding request with its ID |
-| `fabric_scoreboard` | every host-side transaction is decoded (`titan_addr_map_pkg::decode`): unmapped or unreachable from that host → must be DECERR; otherwise the device port must have seen it with the same host index (ID bits [5:4]), ID, address, length, size, burst, prot, write data/strobes, and returned the same read data and responses. Device transactions without a host twin are errors. |
-| `sw_status_monitor` | firmware FAILED → UVM error; prints the firmware's log as `[SW]` |
+| `fabric_scoreboard` | (drops in-flight transactions when the chip resets) every host-side transaction is decoded (`titan_addr_map_pkg::decode`): unmapped or unreachable from that host → must be DECERR; otherwise the device port must have seen it with the same host index (ID bits [5:4]), ID, address, length, size, burst, prot, write data/strobes, and returned the same read data and responses. Device transactions without a host twin are errors. |
+| `sw_status_monitor` | firmware FAILED → UVM error; prints the firmware's log as `[SW]`; counts boots (`n_boots`); `wait_sync(n)` |
 | the tests | their own expectations (sequences, pins) |
 
 ## Files
@@ -102,10 +107,12 @@ All 7 pass (2026-10-18). Each also checks ~19–23 thousand fabric transactions.
 | Path | What |
 |---|---|
 | `agents/axi_agent/` | `axi_if.sv` (signals + SVA), `axi_agent_pkg.sv` (item, monitor, driver, agent, base sequence) |
-| `agents/uart_agent/`, `agents/gpio_agent/` | pin-level monitors |
+| `agents/uart_agent/`, `agents/gpio_agent/` | pin-level monitors (GPIO can also drive) |
+| `agents/clk_agent/` | `clk_mon_if` + `clk_monitor`: count edges / measure frequency of the clkmgr outputs |
 | `env/titan_env_pkg.sv` | env, scoreboard, firmware status monitor |
 | `env/titan_addr_map_pkg.sv` | **generated**: address map + connectivity |
 | `tests/titan_test_pkg.sv` | base test, tests, sequences |
+| `TESTS.md` | the test plan |
 | `tb/tb_top.sv` | chip, pads, POR, image loading |
 | `tb/titan_axi_probe.sv` | **generated**: one `axi_if` per fabric port, bound into the fabric |
 | `tb/gen_tb.py` | generates the two files above from `rtl/fabric/fabric_ports.json` |

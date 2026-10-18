@@ -9,3 +9,12 @@ fw_hello            fw_test                 hello
 fw_gpio_out         fw_gpio_out_test        gpio_out
 fw_uart_tx          fw_uart_tx_test         uart_tx
 fw_timer_irq        fw_test                 timer_irq
+
+# SoC tests (uvm/TESTS.md)
+clk_freq            clk_freq_test           idle
+fw_clk_gate         fw_clk_gate_test        clk_gate
+fw_sw_reset         fw_reset_test           sw_reset
+fw_wdog_reset       fw_reset_test           wdog_reset
+axi_mem_map_sweep   axi_mem_map_sweep_test  idle
+axi_mem_test        axi_mem_test            idle
+fw_plic_gpio_irq    fw_plic_gpio_irq_test   plic_gpio_irq

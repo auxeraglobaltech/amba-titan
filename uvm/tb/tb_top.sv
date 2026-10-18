@@ -120,6 +120,30 @@ module tb_top;
 
   gpio_if gpio_if_i ();
   assign gpio_if_i.pins = {IOB7, IOB6, IOB5, IOB4, IOB3, IOB2, IOB1, IOB0};
+  // Testbench drive of the GPIO pads (inputs to the chip), when drv_en is set.
+  assign IOB0 = gpio_if_i.drv_en[0] ? gpio_if_i.drv_val[0] : 1'bz;
+  assign IOB1 = gpio_if_i.drv_en[1] ? gpio_if_i.drv_val[1] : 1'bz;
+  assign IOB2 = gpio_if_i.drv_en[2] ? gpio_if_i.drv_val[2] : 1'bz;
+  assign IOB3 = gpio_if_i.drv_en[3] ? gpio_if_i.drv_val[3] : 1'bz;
+  assign IOB4 = gpio_if_i.drv_en[4] ? gpio_if_i.drv_val[4] : 1'bz;
+  assign IOB5 = gpio_if_i.drv_en[5] ? gpio_if_i.drv_val[5] : 1'bz;
+  assign IOB6 = gpio_if_i.drv_en[6] ? gpio_if_i.drv_val[6] : 1'bz;
+  assign IOB7 = gpio_if_i.drv_en[7] ? gpio_if_i.drv_val[7] : 1'bz;
+
+  // ---------------------------------------------------------------------------
+  // Clock monitor: clkmgr outputs, for the clock tests
+  // ---------------------------------------------------------------------------
+  clk_mon_if clk_mon_if_i ();
+  assign clk_mon_if_i.clk_main         = dut.top_earlgrey.clkmgr_aon_clocks.clk_main_infra;
+  assign clk_mon_if_i.clk_io           = dut.top_earlgrey.clkmgr_aon_clocks.clk_io_infra;
+  assign clk_mon_if_i.clk_io_div2      = dut.top_earlgrey.clkmgr_aon_clocks.clk_io_div2_infra;
+  assign clk_mon_if_i.clk_io_div4      = dut.top_earlgrey.clkmgr_aon_clocks.clk_io_div4_infra;
+  assign clk_mon_if_i.clk_usb          = dut.top_earlgrey.clkmgr_aon_clocks.clk_usb_infra;
+  assign clk_mon_if_i.clk_aon          = dut.top_earlgrey.clkmgr_aon_clocks.clk_aon_timers;
+  assign clk_mon_if_i.clk_io_div4_peri = dut.top_earlgrey.clkmgr_aon_clocks.clk_io_div4_peri;
+  assign clk_mon_if_i.clk_io_div2_peri = dut.top_earlgrey.clkmgr_aon_clocks.clk_io_div2_peri;
+  assign clk_mon_if_i.clk_io_peri      = dut.top_earlgrey.clkmgr_aon_clocks.clk_io_peri;
+  assign clk_mon_if_i.clk_usb_peri     = dut.top_earlgrey.clkmgr_aon_clocks.clk_usb_peri;
 
   // ---------------------------------------------------------------------------
   // The chip
@@ -153,6 +177,7 @@ module tb_top;
   initial begin
     uvm_config_db #(virtual uart_if)::set(null, "*", "vif", uart0_if);
     uvm_config_db #(virtual gpio_if)::set(null, "*", "vif", gpio_if_i);
+    uvm_config_db #(virtual clk_mon_if)::set(null, "*", "vif", clk_mon_if_i);
     run_test();
   end
 

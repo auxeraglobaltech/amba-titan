@@ -2,9 +2,13 @@
 // tests use. Read them next to the register headers in include/regs/: they
 // are deliberately short, so the register programming is visible.
 
+#include "regs/aon_timer_regs.h"
+#include "regs/clkmgr_regs.h"
 #include "regs/gpio_regs.h"
 #include "regs/pinmux_regs.h"
+#include "regs/pwrmgr_regs.h"
 #include "regs/rv_plic_regs.h"
+#include "regs/rstmgr_regs.h"
 #include "regs/rv_timer_regs.h"
 #include "regs/uart_regs.h"
 #include "titan.h"
@@ -14,6 +18,12 @@
 #define PINMUX  TOP_EARLGREY_PINMUX_AON_BASE_ADDR
 #define TIMER   TOP_EARLGREY_RV_TIMER_BASE_ADDR
 #define PLIC    TOP_EARLGREY_RV_PLIC_BASE_ADDR
+#define RSTMGR  TOP_EARLGREY_RSTMGR_AON_BASE_ADDR
+#define PWRMGR  TOP_EARLGREY_PWRMGR_AON_BASE_ADDR
+#define CLKMGR  TOP_EARLGREY_CLKMGR_AON_BASE_ADDR
+#define AON_TMR TOP_EARLGREY_AON_TIMER_AON_BASE_ADDR
+
+#define MUBI4_TRUE 0x6u
 
 // ---------------------------------------------------------------------------
 // pinmux: a peripheral input selects a pad (INSEL); a pad output selects a
@@ -150,3 +160,44 @@ void plic_enable(uint32_t irq_id, uint32_t priority) {
 
 uint32_t plic_claim(void) { return reg32_read(PLIC, RV_PLIC_CC0_REG_OFFSET); }
 void plic_complete(uint32_t irq_id) { reg32_write(PLIC, RV_PLIC_CC0_REG_OFFSET, irq_id); }
+
+// ---------------------------------------------------------------------------
+// Reset and clock control
+// ---------------------------------------------------------------------------
+
+// RESET_INFO accumulates the causes of every reset since it was last cleared
+// (write 1 to clear). It lives in the always-on domain, so it survives the
+// resets it records.
+uint32_t rstmgr_reset_info(void) { return reg32_read(RSTMGR, RSTMGR_RESET_INFO_REG_OFFSET); }
+void rstmgr_clear_reset_info(void) { reg32_write(RSTMGR, RSTMGR_RESET_INFO_REG_OFFSET, 0xFFFFFFFFu); }
+
+void rstmgr_request_sw_reset(void) {
+  reg32_write(RSTMGR, RSTMGR_RESET_REQ_REG_OFFSET, MUBI4_TRUE);
+  for (;;) wait_for_interrupt();   // the reset arrives a few cycles later
+}
+
+// pwrmgr registers live in the slow AON domain: a write only takes effect once
+// CFG_CDC_SYNC has been set and has cleared itself again.
+void pwrmgr_enable_reset_request(uint32_t idx) {
+  uint32_t en = reg32_read(PWRMGR, PWRMGR_RESET_EN_REG_OFFSET);
+  reg32_write(PWRMGR, PWRMGR_RESET_EN_REG_OFFSET, en | BIT(idx));
+  reg32_write(PWRMGR, PWRMGR_CFG_CDC_SYNC_REG_OFFSET, BIT(PWRMGR_CFG_CDC_SYNC_SYNC_BIT));
+  while (reg32_read(PWRMGR, PWRMGR_CFG_CDC_SYNC_REG_OFFSET) & BIT(PWRMGR_CFG_CDC_SYNC_SYNC_BIT)) {
+  }
+}
+
+void clkmgr_peri_clock_enable(uint32_t bit, bool on) {
+  uint32_t en = reg32_read(CLKMGR, CLKMGR_CLK_ENABLES_REG_OFFSET);
+  en = on ? (en | BIT(bit)) : (en & ~BIT(bit));
+  reg32_write(CLKMGR, CLKMGR_CLK_ENABLES_REG_OFFSET, en);
+}
+
+void aon_wdog_start(uint32_t bark_cycles, uint32_t bite_cycles) {
+  reg32_write(AON_TMR, AON_TIMER_WDOG_CTRL_REG_OFFSET, 0);
+  reg32_write(AON_TMR, AON_TIMER_WDOG_COUNT_REG_OFFSET, 0);
+  reg32_write(AON_TMR, AON_TIMER_WDOG_BARK_THOLD_REG_OFFSET, bark_cycles);
+  reg32_write(AON_TMR, AON_TIMER_WDOG_BITE_THOLD_REG_OFFSET, bite_cycles);
+  reg32_write(AON_TMR, AON_TIMER_WDOG_CTRL_REG_OFFSET, BIT(AON_TIMER_WDOG_CTRL_ENABLE_BIT));
+}
+
+void aon_wdog_stop(void) { reg32_write(AON_TMR, AON_TIMER_WDOG_CTRL_REG_OFFSET, 0); }

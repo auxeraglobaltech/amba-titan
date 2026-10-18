@@ -72,12 +72,17 @@ Base addresses of every IP: `include/top_earlgrey.h` (`TOP_EARLGREY_*_BASE_ADDR`
 | `titan_pass()`, `titan_fail()` | end the test now |
 | `CHECK(cond, fmt, ...)` | fail with file:line and a message if `cond` is false |
 | `titan_printf/puts/putc` | log text to the testbench (`%d %u %x %08x %c %s %p`) |
+| `titan_sync(n)` | tell the testbench "step n reached" (it waits with `env.sw.wait_sync(n)`) |
 | `reg32_read/write(base, offset[, value])` | register access |
 | `pinmux_connect_uart0()`, `pinmux_connect_tb_gpios()` | connect peripherals to the pads the testbench watches |
 | `uart_init/putc/puts/flush` | UART0 |
 | `gpio_set_oe/write/read` | GPIO |
 | `timer_init_us`, `timer_now_us`, `delay_us`, `timer_set_deadline_us`, `timer_irq_enable/ack` | rv_timer, 1 tick = 1 µs |
 | `irq_global_enable`, `irq_timer_enable`, `irq_external_enable`, `plic_enable/claim/complete` | interrupts |
+| `rstmgr_reset_info`, `rstmgr_clear_reset_info`, `rstmgr_request_sw_reset` | reset cause / software reset (`RESET_INFO_POR`, `_SW_RESET`, `_HW_REQ(i)`) |
+| `pwrmgr_enable_reset_request(i)` | let a hardware reset request (1 = aon_timer watchdog) reset the chip |
+| `clkmgr_peri_clock_enable(bit, on)` | gate / ungate a peripheral clock (`CLKMGR_CLK_ENABLES_*_BIT`) |
+| `aon_wdog_start(bark, bite)`, `aon_wdog_stop()` | always-on watchdog (cycles of the 200 kHz AON clock) |
 | define `titan_isr_timer()` / `titan_isr_external()` | your interrupt handler (default: fail "unexpected interrupt") |
 | define `titan_exception_handler()` | your exception handler; return true to skip the faulting instruction |
 
@@ -99,7 +104,7 @@ connect it first.
 
 | Path | What |
 |---|---|
-| `tests/*.c` | the tests (`hello`, `idle`, `gpio_out`, `uart_tx`, `timer_irq`) |
+| `tests/*.c` | the tests: `hello`, `idle`, `gpio_out`, `uart_tx`, `timer_irq`, `clk_gate`, `sw_reset`, `wdog_reset`, `plic_gpio_irq` — see `uvm/TESTS.md` |
 | `include/titan.h` | the API above — include only this |
 | `include/regs/*_regs.h` | register offsets/fields for all 36 IPs — **generated**, `tools/gen_regs.sh` |
 | `include/top_earlgrey.h`, `top_earlgrey_memory.h` | base addresses, IRQ IDs, pinmux indices — copied from OpenTitan |
@@ -122,7 +127,7 @@ connect it first.
 ## Exercises
 
 1. A UART **RX** test: add a driver to `uvm/agents/uart_agent`, receive bytes in C.
-2. GPIO **input** interrupts through the PLIC (`plic_enable`, `titan_isr_external`).
-3. `rv_timer` + `aon_timer` together; a watchdog bark.
+2. A watchdog **bark** interrupt that the firmware services (pets) in time.
+3. Per-IP software reset (`rstmgr SW_RST_CTRL_N`) of spi_host0.
 4. Entropy → CSRNG → AES: port the entropy init from OpenTitan's test ROM into `lib/`.
 5. Execute from main SRAM: copy a function there and call it (`corei` can reach SRAM — and nothing on `xbar_peri`; try it and watch the DECERR).
