@@ -7,14 +7,17 @@
 | Phase | Status | Notes |
 |---|---|---|
 | 0. Archive & reset | ✅ 2026-10-18 | legacy on `legacy-earlgrey-tlul` / tag `legacy-tlul-v1`; `vendor/opentitan` re-added as a real submodule @ `365c167e` (old copy matched the pin except the two known local additions); OTP RMA image generated (`firmware/tools/gen_otp.sh`); ignored build output parked in `_legacy_local/` |
-| 1. Bridges | 🔄 next | |
-| 2. Fabric + top | ⬜ | |
+| 1. Bridges | 🟡 code done, lint clean — **waiting on SIM-1** | PULP vendored (assert macros namespaced `PULP_*`); `gen_flist.py` maps all 621 chip RTL files to `vendor/` by hash; `uvm/sim/lint.py` (slang) used before every hand-off |
+| 2. Fabric + top | 🔄 in progress | |
 | 3. UVM core | ⬜ | |
 | 4. Firmware | ⬜ | OTP image already done |
 | 5. Handover | ⬜ | |
 
-**Simulation hand-offs** (the operator runs them, Claude never does) are listed
-per phase in §8 and announced in chat when ready.
+**Simulation hand-offs** (the operator runs them, Claude never does):
+
+| # | Command | Expect | Status |
+|---|---|---|---|
+| SIM-1 | `source uvm/sim/env.sh && uvm/bridge_tb/run.sh` | `BRIDGE TB PASSED` | ⏳ requested 2026-10-18 |
 **Decisions taken:** full Earl Grey (every IP kept), DUT RTL in a third folder
 `rtl/`, PULP `axi` library for crossbar + CDC, old TB archived to a branch then
 removed from `main`.
