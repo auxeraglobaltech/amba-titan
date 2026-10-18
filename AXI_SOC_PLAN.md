@@ -9,8 +9,8 @@
 | 0. Archive & reset | ✅ 2026-10-18 | legacy on `legacy-earlgrey-tlul` / tag `legacy-tlul-v1`; `vendor/opentitan` re-added as a real submodule @ `365c167e` (old copy matched the pin except the two known local additions); OTP RMA image generated (`firmware/tools/gen_otp.sh`); ignored build output parked in `_legacy_local/` |
 | 1. Bridges | ✅ 2026-10-18 (SIM-1) | PULP vendored (assert macros namespaced `PULP_*`); `gen_flist.py` maps all 621 chip RTL files to `vendor/` by hash; `uvm/sim/lint.py` (slang) used before every hand-off |
 | 2. Fabric + top | 🟡 code done, chip lints clean (slang, sim + non-sim builds) — ✅ SIM-2 passed | `gen_fabric.py` → `titan_axi_fabric.sv` (4 hosts, 24+1 main devices, 27 peri devices, 4 `axi_cdc`) + `fabric_ports.json`; `patch_top.py` changes only the two crossbar instances (117 connections); `rtl.f` = 660 files |
-| 3. UVM core | 🔄 in progress | |
-| 4. Firmware | ⬜ | OTP image already done |
+| 3. UVM core | 🟡 code done, chip + TB lint clean — **waiting on SIM-3** | 56 passive AXI agents + fabric scoreboard + sw status monitor; UART/GPIO monitors; generated probe and address map |
+| 4. Firmware | 🟡 code done, all 5 tests build — **waiting on SIM-3** | crt0 opens Earl Grey's reset PMP (MMWP: SRAM/PLIC denied at reset) and inits SRAM via sram_ctrl; 36 regtool headers |
 | 5. Handover | ⬜ | |
 
 **Simulation hand-offs** (the operator runs them, Claude never does):
@@ -18,6 +18,7 @@
 | # | Command | Expect | Status |
 |---|---|---|---|
 | SIM-1 | `source uvm/sim/env.sh && uvm/bridge_tb/run.sh` | `BRIDGE TB PASSED` | ✅ 2026-10-18 (run 2): 324 reads, 338 writes, 32 error responses on host0; 60 AXI bursts on host1; 0 errors. Run 1 failed on a TB driver-alignment bug, since fixed |
+| SIM-3 | `uvm/sim/run.sh fw_hello` | `RESULT: PASSED` (TB builds; chip boots from the hex ROM; firmware log in run.log) | ⏳ requested 2026-10-18 |
 | SIM-2 | `uvm/sim/elab_rtl.sh` | `RESULT: PASSED` (full chip elaborates on Xcelium) | ✅ 2026-10-18, 42 s, 0 errors; warnings only DEFFIN (PULP deferred `final` assert) and XPWDIS (xprop note, same as upstream) |
 **Decisions taken:** full Earl Grey (every IP kept), DUT RTL in a third folder
 `rtl/`, PULP `axi` library for crossbar + CDC, old TB archived to a branch then
