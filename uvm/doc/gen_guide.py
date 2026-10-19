@@ -3,7 +3,7 @@
 
   uvm/doc/gen_guide.py          -> titan_axi_guide.html in the repo root
 
-Prose lives in uvm/doc/guide_template.html. Everything that comes from the
+Prose lives in uvm/doc/guide.html.tmpl. Everything that comes from the
 design is generated here, from the same files the RTL and testbench use:
   rtl/fabric/fabric_ports.json   address windows, crossbar, clock of every port
   uvm/sim/tests.list             the tests
@@ -20,7 +20,7 @@ HERE = pathlib.Path(__file__).resolve().parent
 ROOT = HERE.parent.parent
 PORTS = ROOT / "rtl/fabric/fabric_ports.json"
 TESTS = ROOT / "uvm/sim/tests.list"
-TEMPLATE = HERE / "guide_template.html"
+TEMPLATE = HERE / "guide.html.tmpl"
 FIGURES = HERE / "figures"          # one SVG per figure, inlined as @@FIG:<name>@@
 OUT = ROOT / "titan_axi_guide.html"
 
