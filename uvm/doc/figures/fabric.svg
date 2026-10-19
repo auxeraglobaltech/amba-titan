@@ -1,0 +1,98 @@
+<svg class="fig-svg" viewBox="0 0 1080 640" xmlns="http://www.w3.org/2000/svg" font-family="IBM Plex Sans, sans-serif">
+<defs>
+ <marker id="ar" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#1b2430"/></marker>
+ <marker id="art" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#6b3fa0"/></marker>
+</defs>
+<!-- domain backgrounds -->
+<rect x="190" y="20" width="560" height="600" rx="10" fill="#e9eef5" stroke="#9fb3cc"/>
+<text x="200" y="40" font-size="13" fill="#1f3a5f" font-weight="700">clk_main 100 MHz</text>
+<rect x="770" y="300" width="300" height="320" rx="10" fill="#e7f1ee" stroke="#9cc7bc"/>
+<text x="780" y="320" font-size="13" fill="#2f7566" font-weight="700">clk_io_div4 24 MHz (xbar_peri side)</text>
+<rect x="770" y="20" width="300" height="270" rx="10" fill="#f5eee4" stroke="#d5b998"/>
+<text x="780" y="40" font-size="13" fill="#8f6430" font-weight="700">own clocks: io 96 / io_div2 48 / usb 48</text>
+<text x="545" y="636" font-size="12" fill="#5b6675" text-anchor="middle">F = tb_top.dut.top_earlgrey.u_axi_fabric (everything inside the shaded areas)</text>
+<!-- hosts -->
+<g font-size="12">
+ <rect x="10" y="70" width="160" height="48" rx="6" fill="#fff" stroke="#1b2430"/><text x="90" y="90" text-anchor="middle" font-weight="600">Ibex instruction</text><text x="90" y="106" text-anchor="middle" fill="#5b6675">rv_core_ibex.corei</text>
+ <rect x="10" y="140" width="160" height="48" rx="6" fill="#fff" stroke="#1b2430"/><text x="90" y="160" text-anchor="middle" font-weight="600">Ibex data</text><text x="90" y="176" text-anchor="middle" fill="#5b6675">rv_core_ibex.cored</text>
+ <rect x="10" y="210" width="160" height="48" rx="6" fill="#fff" stroke="#1b2430"/><text x="90" y="230" text-anchor="middle" font-weight="600">Debug (JTAG)</text><text x="90" y="246" text-anchor="middle" fill="#5b6675">rv_dm.sba</text>
+ <rect x="10" y="290" width="160" height="48" rx="6" fill="#fdf6e3" stroke="#a07a1c" stroke-dasharray="4 3"/><text x="90" y="310" text-anchor="middle" font-weight="600">UVM AXI master</text><text x="90" y="326" text-anchor="middle" fill="#a07a1c">host.sim_host [sim]</text>
+</g>
+<!-- TL-UL arrows to bridges -->
+<g stroke="#6b3fa0" stroke-width="2" marker-end="url(#art)">
+ <line x1="170" y1="94" x2="210" y2="94"/><line x1="170" y1="164" x2="210" y2="164"/><line x1="170" y1="234" x2="210" y2="234"/>
+</g>
+<text x="190" y="62" font-size="10.5" fill="#6b3fa0" text-anchor="middle">TL-UL</text>
+<!-- host bridges -->
+<g font-size="11">
+ <rect x="212" y="74" width="120" height="40" rx="5" fill="#fff" stroke="#1f3a5f"/><text x="272" y="91" text-anchor="middle" font-weight="600">titan_tlul2axi</text><text x="272" y="106" text-anchor="middle" fill="#5b6675">u_host_..corei</text>
+ <rect x="212" y="144" width="120" height="40" rx="5" fill="#fff" stroke="#1f3a5f"/><text x="272" y="161" text-anchor="middle" font-weight="600">titan_tlul2axi</text><text x="272" y="176" text-anchor="middle" fill="#5b6675">u_host_..cored</text>
+ <rect x="212" y="214" width="120" height="40" rx="5" fill="#fff" stroke="#1f3a5f"/><text x="272" y="231" text-anchor="middle" font-weight="600">titan_tlul2axi</text><text x="272" y="246" text-anchor="middle" fill="#5b6675">u_host_rv_dm__sba</text>
+ <rect x="212" y="294" width="120" height="40" rx="5" fill="#fff" stroke="#a07a1c"/><text x="272" y="311" text-anchor="middle" font-weight="600">axi_atop_filter</text><text x="272" y="326" text-anchor="middle" fill="#5b6675">u_sim_host_atop_filter</text>
+</g>
+<line x1="170" y1="314" x2="210" y2="314" stroke="#1b2430" stroke-width="2" marker-end="url(#ar)"/>
+<!-- xbar main -->
+<rect x="370" y="60" width="110" height="290" rx="8" fill="#1f3a5f"/>
+<text x="425" y="190" font-size="15" fill="#fff" text-anchor="middle" font-weight="700">axi_xbar</text>
+<text x="425" y="208" font-size="13" fill="#fff" text-anchor="middle">main</text>
+<text x="425" y="228" font-size="11" fill="#c9d6e8" text-anchor="middle">u_xbar_main</text>
+<text x="425" y="246" font-size="10.5" fill="#c9d6e8" text-anchor="middle">4 slave ports</text>
+<text x="425" y="261" font-size="10.5" fill="#c9d6e8" text-anchor="middle">25 master ports</text>
+<g stroke="#1b2430" stroke-width="2" marker-end="url(#ar)">
+ <line x1="332" y1="94" x2="368" y2="94"/><line x1="332" y1="164" x2="368" y2="164"/><line x1="332" y1="234" x2="368" y2="234"/><line x1="332" y1="314" x2="368" y2="314"/>
+</g>
+<g font-size="10" fill="#1f3a5f"><text x="350" y="88" text-anchor="middle">[0]</text><text x="350" y="158" text-anchor="middle">[1]</text><text x="350" y="228" text-anchor="middle">[2]</text><text x="350" y="308" text-anchor="middle">[3]</text></g>
+<text x="350" y="360" font-size="10.5" fill="#5b6675" text-anchor="middle">main_host_req[i]</text>
+<!-- main-side device bridges -->
+<g font-size="11">
+ <rect x="530" y="70" width="200" height="34" rx="5" fill="#fff" stroke="#1f3a5f"/><text x="630" y="91" text-anchor="middle">u_dev_* (titan_axi2tlul) &times;20</text>
+</g>
+<line x1="480" y1="87" x2="528" y2="87" stroke="#1b2430" stroke-width="2" marker-end="url(#ar)"/>
+<text x="630" y="122" font-size="10.5" fill="#5b6675" text-anchor="middle">ROM, SRAM, flash, crypto, PLIC, ibex cfg ...</text>
+<rect x="530" y="140" width="200" height="34" rx="5" fill="#fdf6e3" stroke="#a07a1c" stroke-dasharray="4 3"/><text x="630" y="161" font-size="11" text-anchor="middle">u_sim_ctrl (titan_sim_ctrl) [sim]</text>
+<line x1="480" y1="157" x2="528" y2="157" stroke="#1b2430" stroke-width="2" marker-end="url(#ar)"/>
+<!-- CDC to own-clock devices -->
+<rect x="530" y="200" width="200" height="34" rx="5" fill="#fff" stroke="#8f6430"/><text x="630" y="221" font-size="11" text-anchor="middle">u_cdc_spi_host0/1, u_cdc_usbdev</text>
+<line x1="480" y1="217" x2="528" y2="217" stroke="#1b2430" stroke-width="2" marker-end="url(#ar)"/>
+<line x1="730" y1="217" x2="790" y2="140" stroke="#1b2430" stroke-width="2" marker-end="url(#ar)"/>
+<g font-size="11">
+ <rect x="790" y="60" width="200" height="34" rx="5" fill="#fff" stroke="#8f6430"/><text x="890" y="81" text-anchor="middle">u_dev_spi_host0 (96 MHz)</text>
+ <rect x="790" y="110" width="200" height="34" rx="5" fill="#fff" stroke="#8f6430"/><text x="890" y="131" text-anchor="middle">u_dev_spi_host1 (48 MHz)</text>
+ <rect x="790" y="160" width="200" height="34" rx="5" fill="#fff" stroke="#8f6430"/><text x="890" y="181" text-anchor="middle">u_dev_usbdev (48 MHz)</text>
+</g>
+<!-- CDC to peri -->
+<rect x="530" y="300" width="200" height="40" rx="5" fill="#fff" stroke="#2f7566" stroke-width="2"/><text x="630" y="318" font-size="12" text-anchor="middle" font-weight="600">axi_cdc  u_cdc_peri</text><text x="630" y="333" font-size="10.5" text-anchor="middle" fill="#5b6675">main_dev_req[4] &rarr; peri_host_req</text>
+<line x1="480" y1="320" x2="528" y2="320" stroke="#1b2430" stroke-width="2" marker-end="url(#ar)"/>
+<text x="504" y="312" font-size="10" fill="#1f3a5f" text-anchor="middle">[4]</text>
+<!-- xbar peri -->
+<rect x="790" y="350" width="110" height="230" rx="8" fill="#2f7566"/>
+<text x="845" y="450" font-size="15" fill="#fff" text-anchor="middle" font-weight="700">axi_xbar</text>
+<text x="845" y="468" font-size="13" fill="#fff" text-anchor="middle">peri</text>
+<text x="845" y="488" font-size="11" fill="#d3ebe5" text-anchor="middle">u_xbar_peri</text>
+<text x="845" y="505" font-size="10.5" fill="#d3ebe5" text-anchor="middle">1 slave port</text>
+<text x="845" y="520" font-size="10.5" fill="#d3ebe5" text-anchor="middle">27 master ports</text>
+<path d="M730,320 L760,320 L760,400 L788,400" fill="none" stroke="#1b2430" stroke-width="2" marker-end="url(#ar)"/>
+<text x="755" y="440" font-size="10" fill="#2f7566" text-anchor="end">link.main_to_peri</text>
+<g font-size="11">
+ <rect x="930" y="360" width="130" height="34" rx="5" fill="#fff" stroke="#2f7566"/><text x="995" y="381" text-anchor="middle">u_dev_* &times;27</text>
+</g>
+<line x1="900" y1="377" x2="928" y2="377" stroke="#1b2430" stroke-width="2" marker-end="url(#ar)"/>
+<text x="995" y="412" font-size="10.5" fill="#5b6675" text-anchor="middle">uart0-3, gpio, i2c0-2,</text>
+<text x="995" y="426" font-size="10.5" fill="#5b6675" text-anchor="middle">rv_timer, spi_device,</text>
+<text x="995" y="440" font-size="10.5" fill="#5b6675" text-anchor="middle">AON: pwrmgr, rstmgr,</text>
+<text x="995" y="454" font-size="10.5" fill="#5b6675" text-anchor="middle">clkmgr, pinmux, aon_timer,</text>
+<text x="995" y="468" font-size="10.5" fill="#5b6675" text-anchor="middle">otp, lc, alert_handler,</text>
+<text x="995" y="482" font-size="10.5" fill="#5b6675" text-anchor="middle">ret. SRAM, ast, ...</text>
+<!-- TL-UL to IPs -->
+<g stroke="#6b3fa0" stroke-width="2" marker-end="url(#art)"><line x1="995" y1="490" x2="995" y2="545"/></g>
+<rect x="930" y="548" width="130" height="34" rx="5" fill="#f6f3fb" stroke="#6b3fa0"/><text x="995" y="569" font-size="11" text-anchor="middle">IPs (TL-UL ports)</text>
+<text x="1008" y="520" font-size="10.5" fill="#6b3fa0">TL-UL</text>
+<!-- legend -->
+<g font-size="11">
+ <line x1="20" y1="420" x2="60" y2="420" stroke="#1b2430" stroke-width="2" marker-end="url(#ar)"/><text x="68" y="424">AXI4</text>
+ <line x1="20" y1="445" x2="60" y2="445" stroke="#6b3fa0" stroke-width="2" marker-end="url(#art)"/><text x="68" y="449">TL-UL</text>
+ <rect x="20" y="462" width="40" height="16" fill="#fdf6e3" stroke="#a07a1c" stroke-dasharray="4 3"/><text x="68" y="475">simulation only (+define+TITAN_SIM)</text>
+ <text x="20" y="505" fill="#5b6675">ID at a device port = {host index, host ID}</text>
+ <text x="20" y="522" fill="#5b6675">host index: corei 0, cored 1, sba 2, UVM 3</text>
+</g>
+</svg>

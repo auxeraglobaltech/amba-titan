@@ -1,0 +1,27 @@
+<svg class="fig-svg" viewBox="0 0 760 330" xmlns="http://www.w3.org/2000/svg" font-family="JetBrains Mono, monospace">
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#5b6675"/></marker></defs>
+<g font-size="12" fill="#1b2430">
+<text x="10" y="35">aclk</text><text x="10" y="75">awvalid</text><text x="10" y="105">awready</text><text x="10" y="135">awaddr</text>
+<text x="10" y="175">wvalid</text><text x="10" y="205">wready</text><text x="10" y="235">wdata</text>
+<text x="10" y="275">bvalid</text><text x="10" y="305">bresp</text>
+</g>
+<g stroke="#d5dbe3">
+<line x1="110" y1="15" x2="110" y2="315"/><line x1="170" y1="15" x2="170" y2="315"/><line x1="230" y1="15" x2="230" y2="315"/><line x1="290" y1="15" x2="290" y2="315"/><line x1="350" y1="15" x2="350" y2="315"/><line x1="410" y1="15" x2="410" y2="315"/><line x1="470" y1="15" x2="470" y2="315"/><line x1="530" y1="15" x2="530" y2="315"/><line x1="590" y1="15" x2="590" y2="315"/><line x1="650" y1="15" x2="650" y2="315"/><line x1="710" y1="15" x2="710" y2="315"/>
+</g>
+<polyline points="110,40 110,22 140,22 140,40 170,40 170,22 200,22 200,40 230,40 230,22 260,22 260,40 290,40 290,22 320,22 320,40 350,40 350,22 380,22 380,40 410,40 410,22 440,22 440,40 470,40 470,22 500,22 500,40 530,40 530,22 560,22 560,40 590,40 590,22 620,22 620,40 650,40 650,22 680,22 680,40 710,40" fill="none" stroke="#1f3a5f" stroke-width="2"/>
+<!-- awvalid high from 170 to 290 (accepted at 290 edge: ready high in cycle 230-290) -->
+<polyline points="110,80 172,80 172,62 290,62 292,80 710,80" fill="none" stroke="#2f7566" stroke-width="2"/>
+<polyline points="110,110 232,110 232,92 290,92 292,110 710,110" fill="none" stroke="#2f7566" stroke-width="2"/>
+<rect x="172" y="122" width="118" height="22" fill="#e9eef5" stroke="#1f3a5f"/><text x="231" y="137" font-size="11" text-anchor="middle" fill="#1f3a5f">0x4000001c</text>
+<polyline points="110,180 172,180 172,162 350,162 352,180 710,180" fill="none" stroke="#2f7566" stroke-width="2"/>
+<polyline points="110,210 292,210 292,192 350,192 352,210 710,210" fill="none" stroke="#2f7566" stroke-width="2"/>
+<rect x="172" y="222" width="178" height="22" fill="#e9eef5" stroke="#1f3a5f"/><text x="261" y="237" font-size="11" text-anchor="middle" fill="#1f3a5f">0x00000074 ('t')</text>
+<polyline points="110,280 532,280 532,262 590,262 592,280 710,280" fill="none" stroke="#2f7566" stroke-width="2"/>
+<rect x="532" y="292" width="58" height="22" fill="#e8f5e9" stroke="#2e7d32"/><text x="561" y="307" font-size="11" text-anchor="middle" fill="#2e7d32">OKAY</text>
+<g font-size="10" fill="#5b6675">
+<line x1="290" y1="55" x2="290" y2="48" stroke="#5b6675" marker-end="url(#arrow)"/><text x="296" y="54">AW handshake</text>
+<text x="356" y="157">W handshake</text>
+<text x="596" y="258">B (bready=1)</text>
+<text x="180" y="57">valid waits for ready, address held stable</text>
+</g>
+</svg>

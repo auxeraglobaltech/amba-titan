@@ -1,0 +1,12 @@
+<svg class="fig-svg" viewBox="0 0 1000 150" xmlns="http://www.w3.org/2000/svg" font-family="IBM Plex Sans, sans-serif">
+<defs><marker id="a5" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#1b2430"/></marker></defs>
+<g font-size="12">
+<rect x="10" y="40" width="140" height="56" rx="6" fill="#fff" stroke="#1b2430"/><text x="80" y="64" text-anchor="middle" font-weight="600">tests/hello.c</text><text x="80" y="82" text-anchor="middle" fill="#5b6675">+ lib/ + link/rom.ld</text>
+<rect x="200" y="40" width="150" height="56" rx="6" fill="#fff" stroke="#1b2430"/><text x="275" y="64" text-anchor="middle" font-weight="600">riscv32 gcc</text><text x="275" y="82" text-anchor="middle" fill="#5b6675">rv32imc, -Os</text>
+<rect x="400" y="40" width="150" height="56" rx="6" fill="#fff" stroke="#1b2430"/><text x="475" y="64" text-anchor="middle" font-weight="600">hello.elf</text><text x="475" y="82" text-anchor="middle" fill="#5b6675">.dis .map</text>
+<rect x="600" y="40" width="160" height="56" rx="6" fill="#fff" stroke="#1b2430"/><text x="680" y="64" text-anchor="middle" font-weight="600">objcopy + elf2hex.py</text><text x="680" y="82" text-anchor="middle" fill="#5b6675">8192 x 32-bit words</text>
+<rect x="810" y="40" width="180" height="56" rx="6" fill="#c9d6e8" stroke="#1f3a5f"/><text x="900" y="64" text-anchor="middle" font-weight="600">$readmemh &rarr; ROM</text><text x="900" y="82" text-anchor="middle" fill="#5b6675">tb_top, before POR ends</text>
+</g>
+<g stroke="#1b2430" stroke-width="2" marker-end="url(#a5)"><line x1="150" y1="68" x2="198" y2="68"/><line x1="350" y1="68" x2="398" y2="68"/><line x1="550" y1="68" x2="598" y2="68"/><line x1="760" y1="68" x2="808" y2="68"/></g>
+<text x="500" y="130" font-size="12" fill="#5b6675" text-anchor="middle">make -C firmware TEST=hello  (run.sh does this for you)  &rarr;  firmware/build/hello/hello.hex</text>
+</svg>

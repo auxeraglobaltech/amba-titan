@@ -1,0 +1,34 @@
+<svg class="fig-svg" viewBox="0 0 1000 520" xmlns="http://www.w3.org/2000/svg" font-family="IBM Plex Sans, sans-serif">
+<defs><marker id="a6" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#5b6675"/></marker></defs>
+<rect x="10" y="10" width="980" height="500" rx="10" fill="#f7f9fb" stroke="#1b2430"/><text x="24" y="32" font-size="14" font-weight="700">tb_top</text>
+<!-- DUT -->
+<rect x="30" y="50" width="430" height="290" rx="8" fill="#e9eef5" stroke="#1f3a5f"/><text x="44" y="72" font-size="13" font-weight="700" fill="#1f3a5f">dut : chip_earlgrey_asic (SecRomCtrlDisableScrambling=1)</text>
+<rect x="50" y="90" width="390" height="150" rx="6" fill="#fff" stroke="#1f3a5f"/><text x="62" y="110" font-size="12" font-weight="600">top_earlgrey.u_axi_fabric</text>
+<rect x="70" y="122" width="350" height="100" rx="6" fill="#fdf6e3" stroke="#a07a1c" stroke-dasharray="4 3"/><text x="245" y="142" font-size="12" text-anchor="middle" font-weight="600">u_titan_axi_probe (bind)</text>
+<text x="245" y="162" font-size="11" text-anchor="middle">56 &times; axi_if : if_host_*, if_link_*, if_dev_*</text>
+<text x="245" y="180" font-size="11" text-anchor="middle" fill="#5b6675">assigns from F.*_req/_rsp (read-only)</text>
+<text x="245" y="198" font-size="11" text-anchor="middle" fill="#a07a1c">force F.sim_host_req &larr; if_host_sim_host</text>
+<rect x="50" y="252" width="125" height="34" rx="5" fill="#fff" stroke="#1f3a5f"/><text x="112" y="273" font-size="11" text-anchor="middle">ROM &larr; fw hex</text>
+<rect x="185" y="252" width="125" height="34" rx="5" fill="#fff" stroke="#1f3a5f"/><text x="247" y="273" font-size="11" text-anchor="middle">OTP &larr; RMA vmem</text>
+<rect x="320" y="252" width="120" height="34" rx="5" fill="#fff" stroke="#1f3a5f"/><text x="380" y="273" font-size="11" text-anchor="middle">clkmgr outputs</text>
+<text x="245" y="315" font-size="11" text-anchor="middle" fill="#5b6675">pads: POR_N driven, IOC4/IOC3 = UART0, IOB0-7 = GPIO, all others weak pull-down</text>
+<!-- interfaces -->
+<rect x="490" y="70" width="150" height="34" rx="5" fill="#fff" stroke="#5b6675"/><text x="565" y="91" font-size="11" text-anchor="middle">uart_if (IOC4/IOC3)</text>
+<rect x="490" y="115" width="150" height="34" rx="5" fill="#fff" stroke="#5b6675"/><text x="565" y="136" font-size="11" text-anchor="middle">gpio_if (IOB0-7)</text>
+<rect x="490" y="160" width="150" height="34" rx="5" fill="#fff" stroke="#5b6675"/><text x="565" y="181" font-size="11" text-anchor="middle">clk_mon_if</text>
+<text x="565" y="222" font-size="11" text-anchor="middle" fill="#5b6675">uvm_config_db</text>
+<!-- env -->
+<rect x="30" y="360" width="950" height="135" rx="8" fill="#e7f1ee" stroke="#2f7566"/><text x="44" y="382" font-size="13" font-weight="700" fill="#2f7566">uvm_test_top (titan_base_test subclass) &rarr; env : titan_env</text>
+<g font-size="11">
+<rect x="50" y="395" width="190" height="86" rx="6" fill="#fff" stroke="#2f7566"/><text x="145" y="415" text-anchor="middle" font-weight="600">axi_&lt;port&gt; &times;56</text><text x="145" y="433" text-anchor="middle">axi_agent: monitor (all)</text><text x="145" y="450" text-anchor="middle">+ driver/sequencer</text><text x="145" y="467" text-anchor="middle">on host.sim_host</text>
+<rect x="255" y="395" width="170" height="86" rx="6" fill="#fff" stroke="#2f7566"/><text x="340" y="415" text-anchor="middle" font-weight="600">scoreboard</text><text x="340" y="433" text-anchor="middle">fabric_scoreboard</text><text x="340" y="450" text-anchor="middle">host txn == device txn</text><text x="340" y="467" text-anchor="middle">or DECERR</text>
+<rect x="440" y="395" width="150" height="86" rx="6" fill="#fff" stroke="#2f7566"/><text x="515" y="415" text-anchor="middle" font-weight="600">sw</text><text x="515" y="433" text-anchor="middle">sw_status_monitor</text><text x="515" y="450" text-anchor="middle">status, log, sync,</text><text x="515" y="467" text-anchor="middle">boot count</text>
+<rect x="605" y="395" width="110" height="86" rx="6" fill="#fff" stroke="#2f7566"/><text x="660" y="415" text-anchor="middle" font-weight="600">uart0</text><text x="660" y="433" text-anchor="middle">uart_monitor</text><text x="660" y="450" text-anchor="middle">1 Mbaud 8N1</text>
+<rect x="725" y="395" width="110" height="86" rx="6" fill="#fff" stroke="#2f7566"/><text x="780" y="415" text-anchor="middle" font-weight="600">gpio / clk</text><text x="780" y="433" text-anchor="middle">gpio_monitor</text><text x="780" y="450" text-anchor="middle">clk_monitor</text>
+<rect x="845" y="395" width="120" height="86" rx="6" fill="#fff" stroke="#2f7566"/><text x="905" y="415" text-anchor="middle" font-weight="600">tracer</text><text x="905" y="433" text-anchor="middle">axi_tracer</text><text x="905" y="450" text-anchor="middle">+trace_addr=</text>
+</g>
+<g stroke="#5b6675" stroke-width="1.5" marker-end="url(#a6)" fill="none">
+<path d="M245,222 L245,250"/><path d="M200,222 C200,300 145,330 145,393"/><path d="M565,194 L565,393"/>
+</g>
+<text x="660" y="300" font-size="11" fill="#5b6675">virtual interfaces</text>
+</svg>

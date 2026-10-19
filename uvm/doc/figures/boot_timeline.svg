@@ -1,0 +1,11 @@
+<svg class="fig-svg" viewBox="0 0 1000 170" xmlns="http://www.w3.org/2000/svg" font-family="IBM Plex Sans, sans-serif">
+<line x1="20" y1="80" x2="980" y2="80" stroke="#5b6675" stroke-width="2"/>
+<g font-size="11.5">
+<circle cx="40" cy="80" r="6" fill="#c62828"/><text x="40" y="60" text-anchor="middle">POR_N released</text><text x="40" y="104" text-anchor="middle" fill="#5b6675">10 &micro;s</text>
+<rect x="80" y="70" width="430" height="20" fill="#e9eef5" stroke="#9fb3cc"/><text x="295" y="60" text-anchor="middle">hardware power-up: AST, pwrmgr, OTP read, life cycle (RMA)</text><text x="295" y="104" text-anchor="middle" fill="#5b6675">~2.2 ms — no software yet</text>
+<rect x="520" y="70" width="230" height="20" fill="#e7f1ee" stroke="#9cc7bc"/><text x="635" y="60" text-anchor="middle">crt0.S: PMP, clocks, SRAM init, .data/.bss</text>
+<circle cx="760" cy="80" r="6" fill="#2f7566"/><text x="760" y="125" text-anchor="middle">IN_TEST</text><text x="760" y="140" text-anchor="middle" fill="#5b6675">~2.26 ms</text>
+<rect x="770" y="70" width="170" height="20" fill="#fdf6e3" stroke="#e3cf9b"/><text x="855" y="60" text-anchor="middle">main() / UVM test body</text>
+<circle cx="950" cy="80" r="6" fill="#2e7d32"/><text x="950" y="125" text-anchor="middle">PASSED</text>
+</g>
+</svg>
