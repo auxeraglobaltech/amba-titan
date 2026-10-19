@@ -31,6 +31,10 @@ uvm/sim/run.sh fw_hello          # one test (~1 minute)
 uvm/sim/regress.sh               # all tests
 ```
 
+**Start here:** open [`titan_axi_guide.html`](titan_axi_guide.html) in a browser —
+the illustrated guide to the design, memory map, testbench, tests, and how to
+watch an AXI transaction at every boundary from the CPU to an IP.
+
 New here? Read [`firmware/README.md`](firmware/README.md), then
 [`uvm/README.md`](uvm/README.md). That is all you need to write tests.
 
