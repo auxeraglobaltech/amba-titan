@@ -9,7 +9,8 @@
 //   │                      AXI writes on dev.titan_sim_ctrl
 //   ├── uart0              uart_monitor on the chip's UART0 TX pad
 //   ├── gpio               gpio_monitor on GPIO[7:0] (+ pad drive via gpio.vif)
-//   └── clk                clk_monitor on the clkmgr outputs
+//   ├── clk                clk_monitor on the clkmgr outputs
+//   └── tracer             axi_tracer: +trace_addr=<hex> follows one address port by port
 
 package titan_env_pkg;
   import uvm_pkg::*;
@@ -226,6 +227,57 @@ package titan_env_pkg;
   endclass
 
   // ===========================================================================
+  // Transaction tracer: +trace_addr=<hex> (run.sh --trace <hex>) prints every
+  // AXI port a transaction touching that address passed through, and at the
+  // end a table in hop order (by address-phase time): initiator, crossbar
+  // link, IP port. Optional +trace_max=<n> (default 20) limits it to the
+  // first n transactions per port.
+  class axi_tracer extends uvm_component;
+    `uvm_component_utils(axi_tracer)
+    uvm_analysis_imp #(axi_seq_item, axi_tracer) imp;
+    bit [31:0]   addr;
+    bit          enabled;
+    int unsigned max_per_port = 20;
+    protected axi_seq_item seen[$];
+    protected int unsigned per_port[string];
+
+    function new(string name, uvm_component parent);
+      super.new(name, parent);
+      imp = new("imp", this);
+    endfunction
+
+    virtual function void build_phase(uvm_phase phase);
+      enabled = $value$plusargs("trace_addr=%h", addr);
+      void'($value$plusargs("trace_max=%d", max_per_port));
+      if (enabled) `uvm_info("TRACE", $sformatf("tracing address 0x%08h", addr), UVM_NONE)
+    endfunction
+
+    virtual function void write(axi_seq_item t);
+      bit [31:0] lo, hi;
+      if (!enabled) return;
+      lo = t.addr & ~32'h3;
+      hi = lo + (t.len + 1) * (1 << t.size);
+      if (!(addr >= lo && addr < hi)) return;
+      if (per_port[t.port] >= max_per_port) return;
+      per_port[t.port]++;
+      seen.push_back(t);
+      `uvm_info("TRACE", $sformatf("addr phase @%0t, done @%0t  %s", t.t_addr, t.t_done, t.convert2string()), UVM_NONE)
+    endfunction
+
+    virtual function void report_phase(uvm_phase phase);
+      if (!enabled) return;
+      seen.sort(x) with (x.t_addr);
+      `uvm_info("TRACE", $sformatf("--- 0x%08h: %0d port crossings, in hop order ---", addr, seen.size()), UVM_NONE)
+      foreach (seen[i])
+        `uvm_info("TRACE", $sformatf("%12t  %-30s %s id=0x%02h len=%0d %s data[0]=0x%08h",
+                                     seen[i].t_addr, seen[i].port, seen[i].kind == AXI_WRITE ? "WR" : "RD",
+                                     seen[i].id, seen[i].len,
+                                     seen[i].resp.size() ? resp_name(seen[i].final_resp()) : "-",
+                                     seen[i].data.size() ? seen[i].data[0] : 32'h0), UVM_NONE)
+    endfunction
+  endclass
+
+  // ===========================================================================
   class titan_env extends uvm_env;
     `uvm_component_utils(titan_env)
 
@@ -236,6 +288,7 @@ package titan_env_pkg;
     uart_monitor       uart0;
     gpio_monitor       gpio;
     clk_monitor        clk;
+    axi_tracer         tracer;
 
     function new(string name, uvm_component parent);
       super.new(name, parent);
@@ -269,11 +322,15 @@ package titan_env_pkg;
       uart0 = uart_monitor::type_id::create("uart0", this);
       gpio  = gpio_monitor::type_id::create("gpio", this);
       clk   = clk_monitor::type_id::create("clk", this);
+      tracer = axi_tracer::type_id::create("tracer", this);
       uart0.baud = cfg.uart_baud;
     endfunction
 
     virtual function void connect_phase(uvm_phase phase);
-      foreach (axi[port]) if (cfg.en_scoreboard) axi[port].monitor.ap.connect(scoreboard.imp);
+      foreach (axi[port]) begin
+        if (cfg.en_scoreboard) axi[port].monitor.ap.connect(scoreboard.imp);
+        axi[port].monitor.ap.connect(tracer.imp);
+      end
       axi["dev.titan_sim_ctrl"].monitor.ap.connect(sw.analysis_export);
       if (cfg.en_scoreboard) scoreboard.rst_vif = axi["host.rv_core_ibex.cored"].cfg.vif;
     endfunction

@@ -27,6 +27,7 @@ uvm/sim/run.sh fw_hello               # build firmware + testbench, run one test
 uvm/sim/run.sh fw_hello --seed 7
 uvm/sim/run.sh fw_hello --waves       # + waves: simvision uvm/sim/runs/fw_hello/waves.shm
 uvm/sim/run.sh fw_hello --verbosity UVM_HIGH   # every AXI transaction on every port
+uvm/sim/run.sh axi_csr_reset --trace 0x40000014 # one address, port by port (see AXI_PATHS.md)
 uvm/sim/regress.sh                    # all tests
 uvm/sim/lint.py --top tb_top --uvm -D TITAN_SIM -D SIMULATION rtl/flist/rtl.f uvm/sim/uvm.f
                                       # ~1-minute compile check with slang, no simulator
@@ -42,6 +43,7 @@ takes ~2.3 ms of simulated time before the CPU runs.
 ## The tests
 
 **Full test plan, one section per test: [`TESTS.md`](TESTS.md).**
+**Watching a transaction cross the fabric, hop by hop: [`AXI_PATHS.md`](AXI_PATHS.md).**
 
 | Area | Tests |
 |---|---|
@@ -113,6 +115,7 @@ test waits with `env.sw.wait_sync(n)`):
 | `env/titan_addr_map_pkg.sv` | **generated**: address map + connectivity |
 | `tests/titan_test_pkg.sv` | base test, tests, sequences |
 | `TESTS.md` | the test plan |
+| `AXI_PATHS.md` | follow a transaction initiator → IP: every boundary, its hierarchy, which test shows it |
 | `tb/tb_top.sv` | chip, pads, POR, image loading |
 | `tb/titan_axi_probe.sv` | **generated**: one `axi_if` per fabric port, bound into the fabric |
 | `tb/gen_tb.py` | generates the two files above from `rtl/fabric/fabric_ports.json` |

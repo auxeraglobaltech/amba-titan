@@ -6,7 +6,8 @@ transaction on every AXI port. So each entry below lists only what the test
 adds on top of that.
 
 Run one: `uvm/sim/run.sh <name>`. Run all: `uvm/sim/regress.sh`.
-Registry: `uvm/sim/tests.list`. Code: `uvm/tests/titan_test_pkg.sv` (UVM side),
+To watch any test's transactions hop by hop (initiator → crossbars → IP), see
+[`AXI_PATHS.md`](AXI_PATHS.md). Registry: `uvm/sim/tests.list`. Code: `uvm/tests/titan_test_pkg.sv` (UVM side),
 `firmware/tests/<firmware>.c` (C side).
 
 | Area | Test | Kind | Status (2026-10-19: 14/14 pass) |

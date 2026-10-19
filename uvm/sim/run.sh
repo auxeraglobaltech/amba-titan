@@ -4,6 +4,8 @@
 #   uvm/sim/run.sh fw_hello              a test from uvm/sim/tests.list
 #   uvm/sim/run.sh fw_hello --seed 7
 #   uvm/sim/run.sh fw_hello --waves      dump the fabric + testbench to waves.shm
+#   uvm/sim/run.sh axi_csr_reset --trace 40000014   follow one address through every AXI port
+#   uvm/sim/run.sh fw_hello --plusarg +foo=1        pass any plusarg to the simulation
 #   uvm/sim/run.sh --build-only          compile/elaborate only
 #   uvm/sim/run.sh fw_hello --print      print the commands, run nothing
 #   uvm/sim/run.sh --list
@@ -19,7 +21,7 @@ here="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 export TITAN_ROOT="$(cd "${here}/../.." && pwd)"
 list="${here}/tests.list"
 
-test="" seed=1 waves=0 print=0 build_only=0 verbosity=UVM_LOW
+test="" seed=1 waves=0 print=0 build_only=0 verbosity=UVM_LOW extra=()
 while [[ $# -gt 0 ]]; do
   case "$1" in
     --seed)       seed="$2"; shift 2 ;;
@@ -27,6 +29,8 @@ while [[ $# -gt 0 ]]; do
     --print)      print=1; shift ;;
     --build-only) build_only=1; shift ;;
     --verbosity)  verbosity="$2"; shift 2 ;;
+    --trace)      extra+=("+trace_addr=${2#0x}"); shift 2 ;;
+    --plusarg)    extra+=("$2"); shift 2 ;;
     --list)       grep -vE '^\s*(#|$)' "${list}"; exit 0 ;;
     -*)           echo "unknown option: $1" >&2; exit 2 ;;
     *)            test="$1"; shift ;;
@@ -58,7 +62,7 @@ if [[ "${build_only}" == 0 ]]; then
            -uvmhome CDNS-1.2
            +UVM_TESTNAME="${uvm_test}" +UVM_VERBOSITY="${verbosity}"
            +firmware="${TITAN_ROOT}/firmware/build/${fw}/${fw}.hex" +otp="${otp}"
-           -svseed "${seed}" -l "${out}/run.log" -licqueue -nocopyright)
+           -svseed "${seed}" -l "${out}/run.log" -licqueue -nocopyright "${extra[@]}")
   [[ "${waves}" == 1 ]] && run_cmd+=(-input "${here}/waves.tcl")
 fi
 
