@@ -6,7 +6,7 @@ so every bus transaction between modules — CPU to crossbar, crossbar to
 crossbar, crossbar to IP — is AXI. The testbench is a fresh UVM environment
 targeting Cadence Xcelium; tests are UVM sequences, C firmware, or both.
 
-**Status (2026-10-18):** 14 tests — bring-up, interconnect, memory map,
+**Status (2026-10-19):** 14/14 tests pass — bring-up, interconnect, memory map,
 memories, clocks, reset, interrupts, peripherals. The test plan is
 [`uvm/TESTS.md`](uvm/TESTS.md). Design decisions and history:
 [`AXI_SOC_PLAN.md`](AXI_SOC_PLAN.md).

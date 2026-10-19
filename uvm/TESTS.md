@@ -9,20 +9,20 @@ Run one: `uvm/sim/run.sh <name>`. Run all: `uvm/sim/regress.sh`.
 Registry: `uvm/sim/tests.list`. Code: `uvm/tests/titan_test_pkg.sv` (UVM side),
 `firmware/tests/<firmware>.c` (C side).
 
-| Area | Test | Kind | Status |
+| Area | Test | Kind | Status (2026-10-19: 14/14 pass) |
 |---|---|---|---|
 | Bring-up | [`fw_hello`](#fw_hello) | C | ✅ |
 | Interconnect | [`axi_sram_rw`](#axi_sram_rw) | UVM | ✅ |
 | Interconnect | [`axi_csr_reset`](#axi_csr_reset) | UVM | ✅ |
 | Interconnect | [`axi_decerr`](#axi_decerr) | UVM | ✅ |
-| Memory map | [`axi_mem_map_sweep`](#axi_mem_map_sweep) | UVM | new |
-| Memory | [`axi_mem_test`](#axi_mem_test) | UVM | new |
-| Clocks | [`clk_freq`](#clk_freq) | TB | new |
-| Clocks | [`fw_clk_gate`](#fw_clk_gate) | C + UVM | new |
-| Reset | [`fw_sw_reset`](#fw_sw_reset) | C + UVM | new |
-| Reset | [`fw_wdog_reset`](#fw_wdog_reset) | C + UVM | new |
+| Memory map | [`axi_mem_map_sweep`](#axi_mem_map_sweep) | UVM | ✅ |
+| Memory | [`axi_mem_test`](#axi_mem_test) | UVM | ✅ |
+| Clocks | [`clk_freq`](#clk_freq) | TB | ✅ |
+| Clocks | [`fw_clk_gate`](#fw_clk_gate) | C + UVM | ✅ |
+| Reset | [`fw_sw_reset`](#fw_sw_reset) | C + UVM | ✅ |
+| Reset | [`fw_wdog_reset`](#fw_wdog_reset) | C + UVM | ✅ |
 | Interrupts | [`fw_timer_irq`](#fw_timer_irq) | C | ✅ |
-| Interrupts | [`fw_plic_gpio_irq`](#fw_plic_gpio_irq) | C + UVM | new |
+| Interrupts | [`fw_plic_gpio_irq`](#fw_plic_gpio_irq) | C + UVM | ✅ |
 | Peripherals | [`fw_gpio_out`](#fw_gpio_out) | C + UVM | ✅ |
 | Peripherals | [`fw_uart_tx`](#fw_uart_tx) | C + UVM | ✅ |
 
@@ -82,6 +82,7 @@ bus master (firmware `idle`); **TB** = the testbench observes the chip
 | How | For each of the 52 address windows (generated from the RTL's own address map, `titan_addr_map_pkg`): read its first word; if the address just past the window belongs to no device, read it too |
 | Passes when | every device answers OKAY or SLVERR (a register it refuses — still an answer), never DECERR or a hang; every unowned address gives DECERR |
 | Proves | the full memory map — and, through the scoreboard, that each access reached exactly the right port |
+| Result | 46 windows answered (45 OKAY; `rv_core_ibex.cfg` above the DV window gives SLVERR — no register there, correct), 42 gaps DECERR |
 | Skipped | `flash_ctrl.mem` (flash uninitialized: a read stalls), `flash_ctrl.prim`, `otp_macro.prim` (macro test interfaces), `rv_dm.*` (debug only), `sram_ctrl_ret_aon.ram` (uninitialized; see below). Enabling each is an exercise. |
 
 ### axi_mem_test
@@ -102,6 +103,7 @@ bus master (firmware `idle`); **TB** = the testbench observes the chip
 | Goal | Every clock is at the frequency the spec says |
 | How | The testbench counts edges of each clkmgr output (`clk_mon_if`, `clk_agent_pkg`) after the firmware's `crt0` has calibrated the AST oscillators |
 | Passes when | main 100 MHz, io 96, io_div2 48, io_div4 24, usb 48 (±2%); aon 200 kHz (±5%) |
+| Result | 99.95 / 96.000 / 48.000 / 24.000 / 47.55 MHz / 200 kHz (the USB model has a drift term: −0.9%) |
 | Proves | AST calibration, clkmgr dividers |
 | Note | Before calibration the models run at random 25–60 MHz (IO) — that is what broke the UART in the first bring-up run |
 

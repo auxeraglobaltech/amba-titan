@@ -19,7 +19,7 @@
 |---|---|---|---|
 | SIM-1 | `source uvm/sim/env.sh && uvm/bridge_tb/run.sh` | `BRIDGE TB PASSED` | ✅ 2026-10-18 (run 2): 324 reads, 338 writes, 32 error responses on host0; 60 AXI bursts on host1; 0 errors. Run 1 failed on a TB driver-alignment bug, since fixed |
 | SIM-3 | `uvm/sim/run.sh fw_hello` then `uvm/sim/regress.sh` | 7/7 `RESULT: PASSED` | ✅ 2026-10-18 (run 2): **7/7 passed**, 0 UVM errors/warnings; 19-23k fabric transactions matched per test; firmware in main() at 2.26 ms. Run 1: 6/7 — uncalibrated AST clocks broke the UART baud; fixed in crt0 |
-| SIM-4 | `uvm/sim/regress.sh` | 14/14 `RESULT: PASSED` (7 new SoC tests: clk_freq, fw_clk_gate, fw_sw_reset, fw_wdog_reset, axi_mem_map_sweep, axi_mem_test, fw_plic_gpio_irq) | ⏳ requested 2026-10-18 |
+| SIM-4 | `uvm/sim/regress.sh` | 14/14 `RESULT: PASSED` | ✅ 2026-10-19: **14/14 passed**, 0 UVM errors/warnings. Clocks within 1% of nominal; both reset tests booted twice with the right RESET_INFO (0x4, 0x10); sweep 46 windows + 42 DECERR gaps |
 | SIM-2 | `uvm/sim/elab_rtl.sh` | `RESULT: PASSED` (full chip elaborates on Xcelium) | ✅ 2026-10-18, 42 s, 0 errors; warnings only DEFFIN (PULP deferred `final` assert) and XPWDIS (xprop note, same as upstream) |
 **Decisions taken:** full Earl Grey (every IP kept), DUT RTL in a third folder
 `rtl/`, PULP `axi` library for crossbar + CDC, old TB archived to a branch then

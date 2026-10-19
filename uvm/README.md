@@ -53,7 +53,7 @@ takes ~2.3 ms of simulated time before the CPU runs.
 | Interrupts | `fw_timer_irq`, `fw_plic_gpio_irq` |
 | Peripherals | `fw_gpio_out`, `fw_uart_tx` |
 
-14 tests. Each also checks ~20 thousand fabric transactions.
+14 tests, all passing (2026-10-19). Each also checks ~20–43 thousand fabric transactions.
 
 ## How a test runs
 
