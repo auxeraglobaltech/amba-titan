@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
-"""uvm/doc/gen_guide.py — build titan_axi_guide.html (the technical reference).
+"""uvm/doc/gen_guide.py — build the two HTML documents in the repo root.
 
-  uvm/doc/gen_guide.py          -> titan_axi_guide.html in the repo root
+  uvm/doc/gen_guide.py   -> titan_axi_guide.html       Technical Reference Manual
+                         -> titan_axi_user_guide.html  User Guide: writing and adding tests
 
 Prose lives in uvm/doc/guide.html.tmpl. Everything that comes from the
 design is generated here, from the same files the RTL and testbench use:
@@ -22,7 +23,10 @@ PORTS = ROOT / "rtl/fabric/fabric_ports.json"
 TESTS = ROOT / "uvm/sim/tests.list"
 TEMPLATE = HERE / "guide.html.tmpl"
 FIGURES = HERE / "figures"          # one SVG per figure, inlined as @@FIG:<name>@@
-OUT = ROOT / "titan_axi_guide.html"
+DOCS = [  # (template, output)
+    (HERE / "guide.html.tmpl", ROOT / "titan_axi_guide.html"),
+    (HERE / "user_guide.html.tmpl", ROOT / "titan_axi_user_guide.html"),
+]
 
 # ----------------------------------------------------------------------------
 # IP catalogue: functional group and one-line description of every device port
@@ -398,9 +402,21 @@ def test_rows():
     return "\n".join(rows), len(rows)
 
 
+def render(template, out, subs):
+    t = template.read_text()
+    for k, v in subs.items():
+        t = t.replace(k, v)
+    for f in sorted(FIGURES.glob("*.svg")):
+        t = t.replace(f"@@FIG:{f.stem}@@", f.read_text())
+    t = t.replace("@@CSS@@", (HERE / "style.css").read_text()).replace("@@JS@@", (HERE / "toc.js").read_text())
+    if "@@" in t:
+        bad = sorted(set(__import__("re").findall(r"@@[A-Z_:a-z0-9]+@@", t)))
+        raise SystemExit(f"{template.name}: unfilled placeholders {bad}")
+    out.write_text(t)
+
+
 def main():
     devs = load()
-    t = TEMPLATE.read_text()
     mm, n_win = memmap_rows(devs)
     tr, n_tests = test_rows()
     subs = {
@@ -413,14 +429,9 @@ def main():
         "@@N_IPS@@": str(len(devs)),
         "@@DATE@@": datetime.date.today().isoformat(),
     }
-    for k, v in subs.items():
-        t = t.replace(k, v)
-    for f in sorted(FIGURES.glob("*.svg")):
-        t = t.replace(f"@@FIG:{f.stem}@@", f.read_text())
-    if "@@" in t:
-        raise SystemExit("unfilled placeholder in template")
-    OUT.write_text(t)
-    print(f"{OUT.relative_to(ROOT)}: {n_win} windows, {len(devs)} device ports, {n_tests} tests")
+    for template, out in DOCS:
+        render(template, out, subs)
+        print(f"{out.relative_to(ROOT)}: {n_win} windows, {len(devs)} device ports, {n_tests} tests")
 
 
 if __name__ == "__main__":

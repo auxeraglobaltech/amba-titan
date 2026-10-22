@@ -1,0 +1,32 @@
+<svg class="fig-svg" viewBox="0 0 1100 430" xmlns="http://www.w3.org/2000/svg" font-family="IBM Plex Sans, Arial, sans-serif">
+<defs><marker id="ugd" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#1f3a5f"/></marker></defs>
+<g font-size="12.5" fill="#1b2430">
+<!-- start -->
+<rect x="20" y="30" width="200" height="54" rx="27" fill="#1f3a5f"/><text x="120" y="54" text-anchor="middle" fill="#fff" font-weight="700">What does the test</text><text x="120" y="71" text-anchor="middle" fill="#fff" font-weight="700">need to do?</text>
+<!-- Q1 -->
+<polygon points="380,22 520,57 380,92 240,57" fill="#e9eef5" stroke="#3b5b84"/><text x="380" y="53" text-anchor="middle" font-weight="600">Does the CPU</text><text x="380" y="69" text-anchor="middle" font-weight="600">run code?</text>
+<line x1="220" y1="57" x2="238" y2="57" stroke="#1f3a5f" stroke-width="1.6" marker-end="url(#ugd)"/>
+<!-- Q1 no -> Q4 -->
+<line x1="380" y1="92" x2="380" y2="268" stroke="#1f3a5f" stroke-width="1.6" marker-end="url(#ugd)"/><text x="388" y="185" fill="#5b6675" font-size="11.5">no (firmware = idle)</text>
+<polygon points="380,270 520,305 380,340 240,305" fill="#e9eef5" stroke="#3b5b84"/><text x="380" y="300" text-anchor="middle" font-weight="600">Does the test</text><text x="380" y="317" text-anchor="middle" font-weight="600">drive the bus?</text>
+<line x1="520" y1="305" x2="700" y2="305" stroke="#1f3a5f" stroke-width="1.6" marker-end="url(#ugd)"/><text x="610" y="297" text-anchor="middle" fill="#5b6675" font-size="11.5">yes</text>
+<line x1="380" y1="340" x2="380" y2="368" stroke="#1f3a5f" stroke-width="1.6" marker-end="url(#ugd)"/><text x="388" y="358" fill="#5b6675" font-size="11.5">no</text>
+<!-- Q1 yes -> Q2 -->
+<line x1="520" y1="57" x2="578" y2="57" stroke="#1f3a5f" stroke-width="1.6" marker-end="url(#ugd)"/><text x="549" y="49" text-anchor="middle" fill="#5b6675" font-size="11.5">yes</text>
+<polygon points="720,22 860,57 720,92 580,57" fill="#e9eef5" stroke="#3b5b84"/><text x="720" y="45" text-anchor="middle" font-weight="600">Must the testbench</text><text x="720" y="61" text-anchor="middle" font-weight="600">drive or check pins /</text><text x="720" y="77" text-anchor="middle" font-weight="600">clocks / timing?</text>
+<line x1="860" y1="57" x2="898" y2="57" stroke="#1f3a5f" stroke-width="1.6" marker-end="url(#ugd)"/><text x="879" y="49" text-anchor="middle" fill="#5b6675" font-size="11.5">no</text>
+<line x1="720" y1="92" x2="720" y2="158" stroke="#1f3a5f" stroke-width="1.6" marker-end="url(#ugd)"/><text x="728" y="130" fill="#5b6675" font-size="11.5">yes</text>
+<!-- results -->
+<rect x="900" y="22" width="180" height="70" rx="3" fill="#e7f1ee" stroke="#2f7566" stroke-width="1.4"/><text x="990" y="46" text-anchor="middle" font-weight="700" fill="#2f7566">Recipe A — C only</text><text x="990" y="64" text-anchor="middle" font-size="11.5">firmware checks itself</text><text x="990" y="81" text-anchor="middle" font-size="11.5">UVM test: fw_test</text>
+<rect x="630" y="160" width="180" height="76" rx="3" fill="#e7f1ee" stroke="#2f7566" stroke-width="1.4"/><text x="720" y="184" text-anchor="middle" font-weight="700" fill="#2f7566">Recipe B — C + UVM</text><text x="720" y="202" text-anchor="middle" font-size="11.5">new class extends</text><text x="720" y="219" text-anchor="middle" font-size="11.5">titan_base_test, titan_sync()</text>
+<rect x="702" y="270" width="180" height="70" rx="3" fill="#e7f1ee" stroke="#2f7566" stroke-width="1.4"/><text x="792" y="294" text-anchor="middle" font-weight="700" fill="#2f7566">Recipe C — UVM only</text><text x="792" y="312" text-anchor="middle" font-size="11.5">sequence + axi_stub_cpu_test</text><text x="792" y="329" text-anchor="middle" font-size="11.5">firmware: idle</text>
+<rect x="290" y="370" width="180" height="54" rx="3" fill="#e7f1ee" stroke="#2f7566" stroke-width="1.4"/><text x="380" y="392" text-anchor="middle" font-weight="700" fill="#2f7566">Recipe D — TB only</text><text x="380" y="410" text-anchor="middle" font-size="11.5">observe (clocks, pins); idle</text>
+<!-- examples -->
+<g font-size="10.5" fill="#5b6675">
+<text x="990" y="110" text-anchor="middle">e.g. fw_hello, fw_timer_irq</text>
+<text x="720" y="252" text-anchor="middle">e.g. fw_uart_tx, fw_clk_gate, fw_plic_gpio_irq</text>
+<text x="792" y="356" text-anchor="middle">e.g. axi_csr_reset, axi_mem_test</text>
+<text x="480" y="400">e.g. clk_freq</text>
+</g>
+</g>
+</svg>

@@ -73,6 +73,8 @@ takes ~2.3 ms of simulated time before the CPU runs.
 
 ## Add a test
 
+Step-by-step, with worked examples of every kind: **`titan_axi_user_guide.html`** (repo root). Summary:
+
 **C only** (firmware checks everything itself):
 1. `firmware/tests/my_test.c` (see `firmware/README.md`)
 2. `uvm/sim/tests.list`: `my_test   fw_test   my_test`

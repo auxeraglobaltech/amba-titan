@@ -103,13 +103,14 @@ figure{margin:12px 0 18px}
   #hdr,#toc{display:none} #doc{margin:0;padding:0} .paper{border:0;box-shadow:none;max-width:none}
   h1{break-before:page} figure,table{break-inside:avoid}
 }
+
 </style>
 </head>
 <body>
 
 <div id="hdr"><button id="tocbtn" aria-label="contents">&#9776;</button>
   <span class="t1">TITAN-AXI</span><span class="t2">Technical Reference Manual — OpenTitan Earl Grey on an AXI4 fabric</span>
-  <span class="rev">Rev 1.1 · 2026-10-19</span></div>
+  <span class="rev">Rev 1.1 · 2026-10-22</span></div>
 
 <nav id="toc"><div class="toc-h">Contents</div></nav>
 
@@ -122,7 +123,8 @@ figure{margin:12px 0 18px}
     <tr><th style="width:170px">Design under test</th><td><code>chip_earlgrey_asic</code> (OpenTitan <code>365c167e</code>) with <code>xbar_main</code> + <code>xbar_peri</code> replaced by <code>titan_axi_fabric</code></td></tr>
     <tr><th>Verification</th><td>UVM 1.2 testbench (Cadence Xcelium), C firmware on the on-chip Ibex core</td></tr>
     <tr><th>Status</th><td>14 tests, all passing · 51 device ports · 52 address windows</td></tr>
-    <tr><th>Generated</th><td>2026-10-19 by <code>uvm/doc/gen_guide.py</code>; block diagram, IP inventory, memory map and test list are generated from <code>rtl/fabric/fabric_ports.json</code> and <code>uvm/sim/tests.list</code></td></tr>
+    <tr><th>Generated</th><td>2026-10-22 by <code>uvm/doc/gen_guide.py</code>; block diagram, IP inventory, memory map and test list are generated from <code>rtl/fabric/fabric_ports.json</code> and <code>uvm/sim/tests.list</code></td></tr>
+    <tr><th>Companion</th><td><code>titan_axi_user_guide.html</code> — User Guide: writing and adding tests, step by step</td></tr>
     <tr><th>Related documents</th><td><code>rtl/README.md</code>, <code>firmware/README.md</code>, <code>uvm/README.md</code>, <code>uvm/TESTS.md</code>, <code>uvm/AXI_PATHS.md</code>, <code>AXI_SOC_PLAN.md</code></td></tr>
   </table>
 </div>
@@ -1201,6 +1203,7 @@ waveform add -signals {
   window.addEventListener('scroll', spy, {passive: true});
   spy();
 })();
+
 </script>
 </body>
 </html>
